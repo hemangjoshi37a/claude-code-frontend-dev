@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/auto_visual_test.py",
+            "description": "Automatically triggers visual testing when frontend files are modified"
+          }
+        ]
+      }
+    ]
+  }
+}
