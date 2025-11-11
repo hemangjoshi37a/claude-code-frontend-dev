@@ -97,11 +97,17 @@ But **10x faster** and **never gets tired**.
    - 🛡️ HTTPS/mixed content checking
    - 🛡️ Input sanitization verification
 
-6. **SEO Testing**
-   - 🔍 Meta tags validation
-   - 🔍 Semantic HTML checking
-   - 🔍 Structured data verification (schema.org)
-   - 🔍 Open Graph & Twitter Cards
+6. **Expert SEO Optimization** ⭐ NEW
+   - 🔍 **Technical SEO**: Crawlability, sitemaps, robots.txt, URL structure
+   - 🔍 **On-Page SEO**: Title tags, meta descriptions, heading hierarchy, keyword optimization
+   - 🔍 **Structured Data**: Schema.org (Organization, Article, Product, FAQ, Breadcrumb)
+   - 🔍 **Rich Snippets**: Featured snippet optimization (+15-30% CTR)
+   - 🔍 **Core Web Vitals for SEO**: LCP, FID, CLS (ranking factors)
+   - 🔍 **Image SEO**: Alt text, file names, WebP conversion, lazy loading
+   - 🔍 **Social SEO**: Open Graph, Twitter Cards, social image optimization
+   - 🔍 **Content SEO**: E-A-T signals, keyword strategy, internal linking
+   - 🔍 **International SEO**: Hreflang tags, multi-language support
+   - 🔍 **SEO Audits**: 100-point scoring, competitive analysis, action plans
 
 7. **Visual & UX Testing**
    - 🎨 Animation quality validation
@@ -318,7 +324,61 @@ This ONE command smartly handles everything:
 5. Validates: Green color (#10B981), checkmark visible
 6. ✅ Reports: PASS - All requirements met
 
-### Example 3: Catch Visual Regression
+### Example 3: Expert SEO Optimization ⭐ NEW
+
+**You ask:** *"Optimize my landing page for SEO"*
+
+**AI workflow:**
+1. 🔍 Runs comprehensive SEO audit
+   - Technical SEO (robots.txt, sitemap, URL structure)
+   - On-page SEO (title, meta, headings)
+   - Structured data analysis
+   - Core Web Vitals for SEO
+   - Image SEO check
+   - Social media tags
+
+2. 📊 Generates SEO score: **85/100**
+
+3. 🎯 Identifies issues:
+   - **Major**: Missing Article schema (no rich snippets)
+   - **Major**: Mobile LCP 3.2s (affects rankings)
+   - **Minor**: Meta description too short (95 chars)
+   - **Minor**: 12 images missing alt text
+
+4. 🔧 Provides specific fixes:
+```html
+<!-- Add Article Schema for Rich Snippets -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Your Article Title",
+  "image": ["https://example.com/image.jpg"],
+  "author": {"@type": "Person", "name": "Author"},
+  "publisher": {"@type": "Organization", "name": "Company"},
+  "datePublished": "2025-11-11"
+}
+</script>
+
+<!-- Optimize Meta Description -->
+<meta name="description" content="Extended description with keywords and CTA that is 150-160 characters long for optimal SERP display">
+
+<!-- Convert hero image to WebP for LCP -->
+<picture>
+  <source type="image/webp" srcset="hero.webp">
+  <img src="hero.jpg" alt="Descriptive keyword-rich alt text" loading="lazy">
+</picture>
+```
+
+5. 📈 Expected results:
+   - **SEO Score**: 85/100 → **95/100**
+   - **Rich Snippets**: Enabled (+15-30% CTR boost)
+   - **Mobile LCP**: 3.2s → **2.1s** (passing Core Web Vital)
+   - **Organic Traffic**: +25-40% in 3-6 months
+
+6. ✅ Reports: SEO optimizations complete, ready for search engines
+
+### Example 4: Catch Visual Regression
 
 **You accidentally change:**
 ```css
