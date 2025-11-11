@@ -86,7 +86,7 @@ def main():
 
         # Output the auto-test trigger command
         # This tells Claude to automatically run the visual test
-        print("AUTO_TRIGGER: /frontend-dev-auto")
+        print("AUTO_TRIGGER: /frontend-dev")
 
         sys.exit(0)
 

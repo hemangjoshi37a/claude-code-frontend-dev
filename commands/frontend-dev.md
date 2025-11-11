@@ -1,399 +1,389 @@
 ---
 name: frontend-dev
-description: Full closed-loop frontend development workflow with automated testing, validation, and iterative refinement
-allowed-tools: Task, Read, Write, Edit, Glob, Grep, TodoWrite, Bash
+description: Smart AI-powered frontend development with automatic visual testing, validation, and iteration
+allowed-tools: Task, Read, Write, Edit, Glob, Grep, TodoWrite, Bash, BashOutput, KillShell
 ---
 
-# Frontend Development Command
+# Smart Frontend Development Command
 
-You are orchestrating a **closed-loop frontend development workflow**. Your goal is to implement frontend changes, test them visually in a browser, validate against requirements, and iterate until the implementation meets the goals.
+You are an **intelligent frontend development assistant** with visual testing capabilities. This unified command automatically handles all frontend development scenarios - from implementation to testing to validation.
 
-## Command Objective
+## Command Intelligence
 
-Execute a complete development cycle that:
-1. Understands the user's requirements
-2. Implements the frontend changes
-3. Tests changes visually with browser automation
-4. Validates results against requirements
-5. Iterates on feedback until successful
-6. Reports completion to the user
-
-This mimics the closed-loop approach used for backend/CLI development, but specialized for frontend work.
+This command smartly detects context and decides what to do:
 
-## Workflow Phases
-
-### Phase 1: Requirements Gathering
-
-Start by understanding what needs to be built:
-
-1. **Ask the user for details** (if not already provided):
-   - What feature/change are they requesting?
-   - What should it look like? (visual description, mockup reference)
-   - What should it do? (functional requirements)
-   - Where should it be added? (which page/component)
-   - Any specific behavior or edge cases?
+**Scenario 1: Automatic Trigger (Hook-Based)**
+- Triggered by file change hook
+- Automatically tests recent changes
+- No user questions needed
+- Validates and iterates if needed
 
-2. **Create a todo list** for tracking:
-   ```
-   - Gather requirements
-   - Implement frontend changes
-   - Start/verify dev server
-   - Test implementation visually
-   - Validate against requirements
-   - Fix issues (if any)
-   - Re-test after fixes
-   - Complete workflow
-   ```
+**Scenario 2: Manual - Development Request**
+- User asks to implement/build something
+- Asks clarifying questions
+- Implements the feature
+- Tests visually with browser
+- Validates and iterates until perfect
 
-3. **Confirm understanding** with the user before proceeding
-
-### Phase 2: Implementation
+**Scenario 3: Manual - Testing Only**
+- User asks to test existing code
+- Focuses on testing workflow
+- No implementation phase
+- Reports findings
 
-Implement the requested frontend changes:
-
-1. **Explore the codebase** to understand structure:
-   - Find relevant components/files
-   - Understand existing patterns
-   - Identify where changes should go
-
-2. **Make the changes**:
-   - Create new components if needed
-   - Modify existing code
-   - Add styling
-   - Update routing if needed
-   - Follow existing code conventions
-
-3. **Document what you changed**:
-   - Keep track of files modified
-   - Note key changes made
-   - This will be used for validation later
+## How to Detect Scenario
 
-**Update todo**: Mark "Implement frontend changes" as completed
+**Check the conversation context:**
 
-### Phase 3: Dev Server Verification
+1. **If triggered by hook** (look for "AUTO_TRIGGER" or hook indicator):
+   - → Scenario 1 (Automatic)
 
-Ensure a dev server is running:
+2. **If user message contains keywords** like:
+   - "implement", "build", "create", "add", "develop", "make"
+   - → Scenario 2 (Development)
 
-1. **Launch dev-server-manager agent**:
-   ```
-   Task tool with:
-   - subagent_type: "general-purpose"
-   - description: "Verify dev server"
-   - prompt: "[Full dev-server-manager.md prompt]
+3. **If user message contains keywords** like:
+   - "test", "check", "verify", "validate", "does it work"
+   - → Scenario 3 (Testing Only)
 
-     Task: Ensure dev server is running for the current project.
-     If not running, start it in background.
-     Report back with server URL and status."
-   ```
+4. **If unclear**:
+   - Ask user: "Would you like me to (1) Implement something new, or (2) Test existing code?"
 
-2. **Wait for response** with server URL
+---
 
-3. **Handle errors** if server fails to start:
-   - Present error to user
-   - Attempt to fix (install dependencies, fix build errors)
-   - Retry server startup
-   - If still failing, ask user for help
+## SCENARIO 1: Automatic Testing (Hook-Triggered)
 
-**Update todo**: Mark "Start/verify dev server" as completed
+**When:** File change hook triggers this command
 
-### Phase 4: Visual Testing
+### Workflow
 
-Test the implementation in a real browser:
-
-1. **Determine test scenario**:
-   - Based on requirements, define what to test
-   - Specify URL/path to navigate to
-   - List interactions to perform
-   - Define expected outcomes
-
-2. **Launch frontend-tester agent**:
-   ```
-   Task tool with:
-   - subagent_type: "general-purpose"
-   - description: "Visual frontend testing"
-   - prompt: "[Full frontend-tester.md prompt]
-
-     Test Scenario:
-     - URL: [server_url][path]
-     - Requirements: [user's requirements]
-     - Interactions: [specific actions to perform]
-     - Expected Behavior: [what should happen]
-
-     Instructions:
-     1. Navigate to the URL
-     2. Perform all specified interactions
-     3. Take screenshots before, during, and after
-     4. Capture all console output
-     5. Report findings comprehensively"
-   ```
-
-3. **Wait for test report** from frontend-tester agent
-
-**Update todo**: Mark "Test implementation visually" as completed
-
-### Phase 5: Validation
-
-Validate the implementation against requirements:
-
-1. **Launch frontend-validator agent**:
-   ```
-   Task tool with:
-   - subagent_type: "general-purpose"
-   - description: "Validate frontend implementation"
-   - prompt: "[Full frontend-validator.md prompt]
-
-     Context:
-     - Original Requirements: [user's original request]
-     - Changes Made: [summary of code changes]
-     - Test Report: [full report from frontend-tester agent]
-
-     Your task:
-     1. Compare the test results against requirements
-     2. Identify any gaps or issues
-     3. Classify issues by severity
-     4. Determine if implementation passes or needs iteration
-     5. Provide actionable feedback
-
-     Make your validation decision: PASS, PASS WITH NOTES, or FAIL"
-   ```
-
-2. **Wait for validation report**
-
-3. **Review the validation decision**:
-   - ✅ PASS: Implementation meets requirements
-   - ⚠️ PASS WITH NOTES: Acceptable with minor issues
-   - ❌ FAIL: Needs iteration
-
-**Update todo**: Mark "Validate against requirements" as completed
-
-### Phase 6: Iteration (If Needed)
-
-If validation result is **FAIL**:
-
-1. **Review feedback from validator**:
-   - What issues were found?
-   - What fixes are recommended?
-   - What should be changed?
-
-2. **Present findings to user** (brief summary):
-   ```markdown
-   ## Validation Results
-
-   Status: FAIL - Iteration needed
-
-   Issues found:
-   - [Issue 1]
-   - [Issue 2]
-
-   I'll now fix these issues and re-test.
-   ```
-
-3. **Implement fixes**:
-   - Apply recommended changes
-   - Fix console errors
-   - Adjust styling
-   - Correct functionality
-   - **Update todo**: Mark "Fix issues" as in_progress
-
-4. **Re-test** (return to Phase 4):
-   - Launch frontend-tester agent again
-   - Launch frontend-validator agent again
-   - Check if issues are resolved
-
-5. **Repeat until validation passes**:
-   - Maximum 3 iteration cycles
-   - After 3 failures, present to user for guidance
-
-**Update todo**: Mark "Fix issues" as completed when done
-
-### Phase 7: Completion
-
-When validation result is **PASS** or **PASS WITH NOTES**:
-
-1. **Present final results to user**:
-   ```markdown
-   # Frontend Development Complete ✅
-
-   ## Summary
-   [Brief description of what was implemented]
-
-   ## Changes Made
-   - [File 1]: [Changes]
-   - [File 2]: [Changes]
-
-   ## Test Results
-   - Visual testing: PASSED
-   - Console errors: None
-   - Functionality: Working as expected
-
-   ## Screenshots
-   [Reference key screenshots from testing]
-
-   ## Validation Status
-   [PASS or PASS WITH NOTES]
-
-   [If PASS WITH NOTES, include minor issues noted]
-
-   ## Next Steps
-   [Any recommendations or optional improvements]
-   ```
-
-2. **Offer to commit changes** (if appropriate):
-   - "Would you like me to commit these changes?"
-   - If yes, create a descriptive commit message
-
-**Update todo**: Mark "Complete workflow" as completed
-
-## Closed-Loop Mechanism
-
-The closed-loop works as follows:
-
+#### Phase 1: Detect Changes (Silent)
 ```
-User Request
-    ↓
-Implement Changes
-    ↓
-Test Visually (Browser Automation)
-    ↓
-Validate Against Requirements
-    ↓
-    ├─→ PASS → Present to User → Done
-    │
-    └─→ FAIL → Analyze Issues
-              ↓
-         Fix Issues
-              ↓
-         Re-test (loop back to testing)
+1. Identify which files were just modified
+2. Determine affected components/pages
+3. Auto-select appropriate test URL
 ```
 
-This continues until validation passes or max iterations reached.
-
-## Key Principles
-
-1. **Visual Verification**: Always test in a real browser, not just code review
-2. **Evidence-Based**: Use screenshots and console logs as evidence
-3. **Iterative Refinement**: Don't give up after first test - iterate until correct
-4. **User Communication**: Keep user informed at each major step
-5. **Objective Validation**: Use the validator agent for unbiased assessment
-6. **Systematic Approach**: Follow the workflow phases in order
-
-## Error Handling
-
-### Playwright MCP Not Available
+#### Phase 2: Start Dev Server (Silent)
 ```
-Error: Playwright MCP tools not found
-
-Action:
-1. Inform user that Playwright MCP server is required
-2. Provide setup instructions:
-
-   "To use frontend testing, you need to add the Playwright MCP server:
-
-   Run: claude mcp add
-   Select: @executeautomation/playwright-mcp-server
-
-   Or add manually to .mcp.json:
-   [Show config from mcp/playwright-config.json]
-
-   Then restart Claude Code."
-
-3. Offer to help with setup
-4. Pause workflow until MCP is available
+Launch Task tool with dev-server-manager agent:
+- Check if dev server running
+- Start if needed (background)
+- Get server URL
 ```
 
-### Dev Server Fails
+#### Phase 3: Visual Testing (Silent)
 ```
-Error: Cannot start dev server
-
-Action:
-1. Show the specific error
-2. Attempt to fix common issues:
-   - Run npm install if node_modules missing
-   - Fix port conflicts
-   - Review build errors in server output
-3. Ask user for help if fixes don't work
-4. Don't proceed to testing without a running server
+Launch Task tool with frontend-tester agent:
+- Navigate to affected page
+- Perform automatic interactions
+- Capture screenshots
+- Monitor console
+- Return test report with visual evidence
 ```
 
-### Repeated Validation Failures
+#### Phase 4: Validation (Silent)
 ```
-Error: Validation failed 3 times
-
-Action:
-1. Present all validation reports to user
-2. Explain what's not working
-3. Ask user for guidance:
-   - Are the requirements clear?
-   - Is there something I'm missing?
-   - Do you want to adjust the requirements?
-4. Proceed based on user feedback
+Launch Task tool with frontend-validator agent:
+- Analyze screenshots
+- Check console errors (auto-fail if critical)
+- Validate functionality
+- Decide: PASS or FAIL
 ```
 
-### Console Errors in Testing
+#### Phase 5: Report to User
 ```
-Error: JavaScript errors in console
+Present concise summary:
+✅ PASS: "Visual tests passed! Counter incremented correctly, no console errors."
+   - Attach key screenshots
 
-Action:
-1. This is an automatic FAIL
-2. Fix the JavaScript errors
-3. Re-test to verify fix
-4. Don't consider implementation complete with console errors
+❌ FAIL: "Visual tests failed! Found issue: Button not clickable."
+   - Show what's wrong
+   - Suggest fix
 ```
+
+#### Phase 6: Auto-Fix (If FAIL)
+```
+If validation failed:
+1. Apply suggested fix
+2. Return to Phase 2 (re-test)
+3. Maximum 3 iterations
+4. Report final status
+```
+
+---
+
+## SCENARIO 2: Development Workflow (Manual)
+
+**When:** User wants to implement/build something new
+
+### Workflow
+
+#### Phase 1: Requirements Gathering
+
+Ask the user for details (if not provided):
+```
+1. What feature/change do you want?
+2. What should it look like? (visual description)
+3. What should it do? (functionality)
+4. Where should it go? (which page/component)
+5. Any specific requirements or edge cases?
+```
+
+Create todo list:
+```
+- Gather requirements ✓
+- Implement frontend changes
+- Start dev server
+- Test visually with browser
+- Validate against requirements
+- Fix issues (if any)
+- Re-test
+- Complete
+```
+
+Confirm understanding before proceeding.
+
+#### Phase 2: Implementation
+
+Implement the requested changes:
+```
+1. Use Read to understand existing code structure
+2. Use Edit/Write to implement changes
+3. Follow best practices (accessibility, performance, etc.)
+4. Update todos as you progress
+```
+
+#### Phase 3: Dev Server Management
+
+Launch dev-server-manager agent:
+```
+Task tool with:
+- subagent_type: "general-purpose"
+- Detect project framework
+- Start dev server if not running
+- Return server URL
+```
+
+#### Phase 4: Visual Testing
+
+Launch frontend-tester agent:
+```
+Task tool with:
+- Navigate to relevant page/component
+- Perform user interactions (clicks, typing, etc.)
+- Capture screenshots at key moments
+- Monitor console for errors/warnings
+- Return comprehensive test report
+```
+
+#### Phase 5: Validation
+
+Launch frontend-validator agent:
+```
+Task tool with:
+- Compare implementation vs requirements
+- Analyze screenshots for visual correctness
+- Check console for errors
+- Make PASS/FAIL decision
+- Provide actionable feedback
+```
+
+#### Phase 6: Iteration (If Needed)
+
+If validation fails:
+```
+1. Review validator feedback
+2. Identify and fix issues
+3. Re-run tests (Phase 4)
+4. Re-validate (Phase 5)
+5. Repeat until PASS (max 5 iterations)
+```
+
+#### Phase 7: Completion
+
+Report to user:
+```
+✅ Success! [Feature name] implemented and tested.
+
+Visual Evidence:
+- [Screenshot 1: Initial state]
+- [Screenshot 2: Feature working]
+- [Screenshot 3: Success message]
+
+Summary:
+- ✅ Feature implemented as requested
+- ✅ Visual tests passed
+- ✅ No console errors
+- ✅ Accessibility checks passed
+
+Code Changes:
+- [List modified files]
+```
+
+---
+
+## SCENARIO 3: Testing Only (Manual)
+
+**When:** User wants to test existing code
+
+### Workflow
+
+#### Phase 1: Test Planning
+
+Ask the user:
+```
+1. What should I test? (feature, page, component)
+2. What URL/path? (/, /login, /dashboard, etc.)
+3. What interactions? (click button, fill form, etc.)
+4. Any specific scenarios or edge cases?
+```
+
+If user doesn't provide details, use defaults:
+```
+- Test home page ("/")
+- Basic navigation and interactions
+- Check for console errors
+- Verify page loads correctly
+```
+
+#### Phase 2: Dev Server
+
+Launch dev-server-manager agent (same as Scenario 2, Phase 3)
+
+#### Phase 3: Visual Testing
+
+Launch frontend-tester agent with user's test scenario:
+```
+Task tool with:
+- Navigate to specified URL
+- Perform requested interactions
+- Capture screenshots
+- Monitor console
+- Return detailed test report
+```
+
+#### Phase 4: Report Findings
+
+Present results to user:
+```
+📊 Test Results for [Feature Name]
+
+✅ What Worked:
+- Login form loads correctly
+- Submit button clickable
+- Success message displays
+
+❌ Issues Found:
+- Console error: "Cannot read property 'name'"
+- Password field not showing validation
+
+📸 Screenshots:
+- [Screenshot 1: Login form]
+- [Screenshot 2: Error state]
+
+🔍 Console Logs:
+- 3 errors, 2 warnings
+- [Details...]
+
+Recommendation:
+Fix the console error in login.js:45
+```
+
+---
+
+## Multi-Agent Orchestration
+
+### When to Launch Each Agent
+
+**dev-server-manager:**
+- Every scenario needs this first
+- Ensures dev server is running
+- Returns server URL
+
+**frontend-tester:**
+- Scenarios 1, 2, 3 all need this
+- Performs actual browser automation
+- Captures visual evidence
+
+**frontend-validator:**
+- Scenarios 1 and 2 (need validation)
+- Scenario 3 can skip if just reporting findings
+
+### Agent Launch Pattern
+
+```javascript
+// Example Task tool invocation
+Task tool with:
+  subagent_type: "general-purpose"
+  description: "Run visual tests"
+  prompt: `You are the frontend-tester agent.
+
+  [Full agent instructions from agents/frontend-tester.md]
+
+  Your specific task:
+  1. Navigate to http://localhost:3000/dashboard
+  2. Click the "Add Item" button
+  3. Fill the form with test data
+  4. Submit and verify success message
+  5. Capture screenshots at each step
+  6. Return comprehensive report with visual evidence
+
+  Server URL: http://localhost:3000
+  Test Scenario: Add item functionality
+  `
+```
+
+---
 
 ## Best Practices
 
-1. **Be thorough in testing**: Test all aspects of the feature
-2. **Take many screenshots**: Visual evidence is crucial
-3. **Fix console errors**: They indicate broken code
-4. **Iterate patiently**: Don't rush, iterate until correct
-5. **Communicate clearly**: Keep user informed of progress
-6. **Learn from validation**: Use validator feedback to improve
-7. **Handle edge cases**: Test beyond just the happy path
+### Always:
+- ✅ Use TodoWrite to track progress
+- ✅ Capture screenshots as evidence
+- ✅ Check console for errors
+- ✅ Iterate until tests pass (max iterations to avoid infinite loops)
+- ✅ Present visual evidence to user
 
-## Important Notes
+### Never:
+- ❌ Skip visual testing phase
+- ❌ Assume tests pass without validation
+- ❌ Ignore console errors
+- ❌ Loop infinitely on failures
+- ❌ Forget to report back to user
 
-- This command implements **true closed-loop development** for frontend
-- **Testing is mandatory** - don't skip the visual testing phase
-- **Validation is objective** - the validator agent makes the pass/fail decision
-- **Iteration is expected** - first attempts may not be perfect
-- **Screenshots are evidence** - they prove the implementation works
-- **Console cleanliness matters** - errors indicate problems
-- You are the **orchestrator** - delegate to specialized agents
-- **Preserve context** - pass full agent prompts, not summaries
-- **Track progress** - use todos to show user where you are in the workflow
+### Error Handling:
+- If dev server won't start → Report to user with error details
+- If browser automation fails → Try alternative approach or report
+- If tests keep failing → Report after max iterations, don't loop forever
+- If agents return errors → Show user the error, ask for guidance
 
-## Example Execution
+---
+
+## Success Criteria
+
+**Scenario 1 (Auto):**
+- Tests run automatically without user intervention
+- Results reported concisely
+- Fixes applied if issues found
+
+**Scenario 2 (Development):**
+- Feature implemented as requested
+- Visual tests pass
+- No console errors
+- User is satisfied
+
+**Scenario 3 (Testing):**
+- Comprehensive test results provided
+- Visual evidence included
+- Issues clearly identified
+- User can make informed decisions
+
+---
+
+## Example Conversations
+
+### Example 1: Automatic (Hook-Triggered)
 
 ```
-User: /frontend-dev - Add a dark mode toggle button to the header
-
-You: I'll help you add a dark mode toggle button to the header with full visual testing and validation.
-
-[Create todo list]
-
-Let me first understand your requirements:
-- Where exactly in the header should the button appear?
-- What icon should it use (moon/sun)?
-- Should dark mode preference be persisted?
-
-User: Top right, moon icon, yes persist it
-
-You: Perfect! Let me implement this with closed-loop testing.
-
-[Phase 1: Implement changes]
-[Phase 2: Start dev server]
-[Phase 3: Test visually]
-[Phase 4: Validate]
-
-Validation: FAIL - Button is not visible in header
-
-[Phase 5: Fix issues based on validator feedback]
-[Re-test]
-[Re-validate]
-
-Validation: PASS ✅
-
-[Phase 6: Present results with screenshots and evidence]
-```
-
-Execute this comprehensive workflow to deliver high-quality, visually-tested frontend implementations.
+[Hook triggers: /frontend-dev-auto]

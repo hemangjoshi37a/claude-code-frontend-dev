@@ -151,12 +151,15 @@ npm install
 
 ### Verify Installation
 
-Type `/frontend-dev` in Claude Code - you should see **4 commands**:
+Type `/frontend-dev` in Claude Code - you should see **one smart command**:
 
-- `/frontend-dev:frontend-dev` - Full closed-loop workflow
-- `/frontend-dev:frontend-dev-auto` - Automatic mode (triggered by file edits)
-- `/frontend-dev:test-frontend` - Visual testing only
-- `/frontend-dev:serve` - Dev server management
+- `/frontend-dev` - Intelligent frontend development with automatic visual testing
+
+This ONE command smartly handles everything:
+- ✅ Automatic testing (when files change)
+- ✅ Manual development (implement features)
+- ✅ Manual testing (test existing code)
+- ✅ No need to choose - it detects context automatically!
 
 ---
 
