@@ -1,389 +1,775 @@
 ---
 name: frontend-dev
-description: Smart AI-powered frontend development with automatic visual testing, validation, and iteration
+description: Fully autonomous closed-loop frontend development with visual testing, validation, and iterative improvement
 allowed-tools: Task, Read, Write, Edit, Glob, Grep, TodoWrite, Bash, BashOutput, KillShell
 ---
 
-# Smart Frontend Development Command
+# Frontend Development - Closed-Loop Command
 
-You are an **intelligent frontend development assistant** with visual testing capabilities. This unified command automatically handles all frontend development scenarios - from implementation to testing to validation.
+This command provides **fully autonomous, closed-loop frontend development** with visual browser testing, validation, and automatic iterative improvement until perfect.
 
-## Command Intelligence
+## What This Command Does
 
-This command smartly detects context and decides what to do:
+1. **Understands your intent** - Parses what you want to build/test/fix
+2. **Plans comprehensively** - Creates detailed task list (10-20 steps)
+3. **Reads necessary code** - Understands current implementation
+4. **Implements changes** - Writes clean, production-ready code
+5. **Tests in browser** - Captures screenshots and console output
+6. **Validates results** - Expert validation against requirements
+7. **Iterates automatically** - Fixes issues and re-tests (up to 5 iterations)
+8. **Reports completion** - Shows visual evidence of success
 
-**Scenario 1: Automatic Trigger (Hook-Based)**
-- Triggered by file change hook
-- Automatically tests recent changes
-- No user questions needed
-- Validates and iterates if needed
+## How It Works: The Closed-Loop
 
-**Scenario 2: Manual - Development Request**
-- User asks to implement/build something
-- Asks clarifying questions
-- Implements the feature
-- Tests visually with browser
-- Validates and iterates until perfect
-
-**Scenario 3: Manual - Testing Only**
-- User asks to test existing code
-- Focuses on testing workflow
-- No implementation phase
-- Reports findings
-
-## How to Detect Scenario
-
-**Check the conversation context:**
-
-1. **If triggered by hook** (look for "AUTO_TRIGGER" or hook indicator):
-   - → Scenario 1 (Automatic)
-
-2. **If user message contains keywords** like:
-   - "implement", "build", "create", "add", "develop", "make"
-   - → Scenario 2 (Development)
-
-3. **If user message contains keywords** like:
-   - "test", "check", "verify", "validate", "does it work"
-   - → Scenario 3 (Testing Only)
-
-4. **If unclear**:
-   - Ask user: "Would you like me to (1) Implement something new, or (2) Test existing code?"
-
----
-
-## SCENARIO 1: Automatic Testing (Hook-Triggered)
-
-**When:** File change hook triggers this command
-
-### Workflow
-
-#### Phase 1: Detect Changes (Silent)
 ```
-1. Identify which files were just modified
-2. Determine affected components/pages
-3. Auto-select appropriate test URL
-```
+Your Request → Master Coordinator Agent → Orchestrates 5 Specialized Agents:
 
-#### Phase 2: Start Dev Server (Silent)
-```
-Launch Task tool with dev-server-manager agent:
-- Check if dev server running
-- Start if needed (background)
-- Get server URL
-```
+                                         1. UX Design Specialist (design)
+                                         2. Frontend Tester (browser automation)
+                                         3. Frontend Validator (quality assurance)
+                                         4. SEO Specialist (optimization)
+                                         5. Dev Server Manager (infrastructure)
 
-#### Phase 3: Visual Testing (Silent)
-```
-Launch Task tool with frontend-tester agent:
-- Navigate to affected page
-- Perform automatic interactions
-- Capture screenshots
-- Monitor console
-- Return test report with visual evidence
-```
-
-#### Phase 4: Validation (Silent)
-```
-Launch Task tool with frontend-validator agent:
-- Analyze screenshots
-- Check console errors (auto-fail if critical)
-- Validate functionality
-- Decide: PASS or FAIL
-```
-
-#### Phase 5: Report to User
-```
-Present concise summary:
-✅ PASS: "Visual tests passed! Counter incremented correctly, no console errors."
-   - Attach key screenshots
-
-❌ FAIL: "Visual tests failed! Found issue: Button not clickable."
-   - Show what's wrong
-   - Suggest fix
-```
-
-#### Phase 6: Auto-Fix (If FAIL)
-```
-If validation failed:
-1. Apply suggested fix
-2. Return to Phase 2 (re-test)
-3. Maximum 3 iterations
-4. Report final status
+Code Change → Test in Browser → Screenshot + Console → Validate →
+     ↑                                                              ↓
+     └──────────────── Fix Issues (if any) ←───────────────────────┘
+                    (Repeat until perfect)
 ```
 
 ---
 
-## SCENARIO 2: Development Workflow (Manual)
+## Usage
 
-**When:** User wants to implement/build something new
-
-### Workflow
-
-#### Phase 1: Requirements Gathering
-
-Ask the user for details (if not provided):
+### Simple Usage
 ```
-1. What feature/change do you want?
-2. What should it look like? (visual description)
-3. What should it do? (functionality)
-4. Where should it go? (which page/component)
-5. Any specific requirements or edge cases?
+/frontend-dev - add a dark mode toggle
 ```
 
-Create todo list:
+### Detailed Usage
 ```
-- Gather requirements ✓
-- Implement frontend changes
-- Start dev server
-- Test visually with browser
-- Validate against requirements
-- Fix issues (if any)
-- Re-test
-- Complete
+/frontend-dev - implement a user profile dropdown menu with avatar, settings link, and logout button. Make it modern with glassmorphism effect.
 ```
 
-Confirm understanding before proceeding.
-
-#### Phase 2: Implementation
-
-Implement the requested changes:
+### Testing Existing Code
 ```
-1. Use Read to understand existing code structure
-2. Use Edit/Write to implement changes
-3. Follow best practices (accessibility, performance, etc.)
-4. Update todos as you progress
-```
-
-#### Phase 3: Dev Server Management
-
-Launch dev-server-manager agent:
-```
-Task tool with:
-- subagent_type: "general-purpose"
-- Detect project framework
-- Start dev server if not running
-- Return server URL
-```
-
-#### Phase 4: Visual Testing
-
-Launch frontend-tester agent:
-```
-Task tool with:
-- Navigate to relevant page/component
-- Perform user interactions (clicks, typing, etc.)
-- Capture screenshots at key moments
-- Monitor console for errors/warnings
-- Return comprehensive test report
-```
-
-#### Phase 5: Validation
-
-Launch frontend-validator agent:
-```
-Task tool with:
-- Compare implementation vs requirements
-- Analyze screenshots for visual correctness
-- Check console for errors
-- Make PASS/FAIL decision
-- Provide actionable feedback
-```
-
-#### Phase 6: Iteration (If Needed)
-
-If validation fails:
-```
-1. Review validator feedback
-2. Identify and fix issues
-3. Re-run tests (Phase 4)
-4. Re-validate (Phase 5)
-5. Repeat until PASS (max 5 iterations)
-```
-
-#### Phase 7: Completion
-
-Report to user:
-```
-✅ Success! [Feature name] implemented and tested.
-
-Visual Evidence:
-- [Screenshot 1: Initial state]
-- [Screenshot 2: Feature working]
-- [Screenshot 3: Success message]
-
-Summary:
-- ✅ Feature implemented as requested
-- ✅ Visual tests passed
-- ✅ No console errors
-- ✅ Accessibility checks passed
-
-Code Changes:
-- [List modified files]
+/frontend-dev - test the checkout flow and fix any issues
 ```
 
 ---
 
-## SCENARIO 3: Testing Only (Manual)
+## The 5 Specialized Agents
 
-**When:** User wants to test existing code
+### 1. UX Design Specialist
+- Expert in modern design trends (glassmorphism, neumorphism, etc.)
+- Color theory, typography, spacing, layouts
+- Accessibility-aware design
+- Provides design recommendations and code
 
-### Workflow
+### 2. Frontend Tester (Critical - Closed-Loop Core)
+- Browser automation with Playwright
+- Captures screenshots at every step
+- Monitors console for errors/warnings
+- Tests functionality, responsiveness, accessibility
+- Provides visual evidence
 
-#### Phase 1: Test Planning
+### 3. Frontend Validator (Critical - Quality Gate)
+- Validates implementation vs requirements
+- Analyzes screenshots for visual correctness
+- Checks console output for errors
+- Makes PASS/FAIL decisions
+- Provides specific fixes if FAIL
 
-Ask the user:
+### 4. SEO Specialist
+- Technical SEO (meta tags, structured data)
+- Performance optimization (Core Web Vitals)
+- Mobile-first best practices
+- Social media optimization (Open Graph, Twitter Cards)
+
+### 5. Dev Server Manager
+- Detects project type (Vite, Next.js, React, etc.)
+- Starts dev server automatically
+- Health checks and monitoring
+- Returns server URL for testing
+
+---
+
+## Workflow Example
+
+### User Request:
 ```
-1. What should I test? (feature, page, component)
-2. What URL/path? (/, /login, /dashboard, etc.)
-3. What interactions? (click button, fill form, etc.)
-4. Any specific scenarios or edge cases?
+/frontend-dev - add a dark mode toggle
 ```
 
-If user doesn't provide details, use defaults:
+### What Happens Automatically:
+
+**Phase 1: Planning (10 seconds)**
 ```
-- Test home page ("/")
-- Basic navigation and interactions
-- Check for console errors
-- Verify page loads correctly
-```
-
-#### Phase 2: Dev Server
-
-Launch dev-server-manager agent (same as Scenario 2, Phase 3)
-
-#### Phase 3: Visual Testing
-
-Launch frontend-tester agent with user's test scenario:
-```
-Task tool with:
-- Navigate to specified URL
-- Perform requested interactions
-- Capture screenshots
-- Monitor console
-- Return detailed test report
+✓ Parsed intent: Implement dark mode toggle
+✓ Created 16-step task list
+✓ Read ThemeContext, Header, and 12 other files
+✓ Identified: Need theme state, toggle component, style updates
 ```
 
-#### Phase 4: Report Findings
-
-Present results to user:
+**Phase 2: Design & SEO Review (15 seconds - Parallel)**
 ```
-📊 Test Results for [Feature Name]
+Agent 1 (UX): Recommended glassmorphism toggle, color palette
+Agent 2 (SEO): Confirmed no SEO impact, may improve engagement
+```
 
-✅ What Worked:
-- Login form loads correctly
-- Submit button clickable
-- Success message displays
+**Phase 3: Implementation (30 seconds)**
+```
+✓ Created ThemeContext.tsx (theme state)
+✓ Created Toggle.tsx (toggle component)
+✓ Updated 15 styled components for dark mode
+✓ Added localStorage persistence
+```
 
-❌ Issues Found:
-- Console error: "Cannot read property 'name'"
-- Password field not showing validation
+**Phase 4: Start Dev Server (5 seconds)**
+```
+✓ Detected: Vite project
+✓ Started: npm run dev
+✓ Server ready: http://localhost:5173
+```
 
-📸 Screenshots:
-- [Screenshot 1: Login form]
-- [Screenshot 2: Error state]
+**Phase 5: Visual Testing - Round 1 (20 seconds)**
+```
+✓ Navigated to homepage
+✓ Screenshot 1: Light mode (initial)
+✓ Clicked toggle button
+✓ Screenshot 2: Dark mode activated
+✓ Console: No errors
+✓ Tested on mobile, tablet, desktop viewports
+```
 
-🔍 Console Logs:
-- 3 errors, 2 warnings
-- [Details...]
+**Phase 6: Validation - Round 1 (10 seconds)**
+```
+⚠ Decision: FAIL
+⚠ Issue: Header text contrast 3.2:1 (needs 4.5:1 for WCAG AA)
+✓ Fix provided: Change color from #ccc to #fff in Header.tsx
+```
 
-Recommendation:
-Fix the console error in login.js:45
+**Phase 7: Iteration 1 - Apply Fix (5 seconds)**
+```
+✓ Updated Header.tsx: text color #fff
+✓ Applying automatic fix...
+```
+
+**Phase 8: Visual Testing - Round 2 (20 seconds)**
+```
+✓ Re-tested with changes
+✓ Screenshot 3: Dark mode with improved contrast
+✓ Console: Still no errors
+✓ All viewports tested
+```
+
+**Phase 9: Validation - Round 2 (10 seconds)**
+```
+✓ Decision: PASS
+✓ Contrast: 7.1:1 (exceeds WCAG AA)
+✓ Functionality: Perfect
+✓ All requirements met
+✓ Production-ready
+```
+
+**Phase 10: Report (5 seconds)**
+```markdown
+✅ Dark Mode Toggle - Successfully Implemented & Tested
+
+📸 Visual Evidence:
+   - Screenshot 1: Light mode (initial state)
+   - Screenshot 2: Dark mode (working perfectly)
+   - Screenshot 3: After contrast fix (WCAG compliant)
+
+✓ Features Implemented:
+   - Toggle button with smooth animation
+   - Theme context for state management
+   - 15 components updated for dark mode
+   - localStorage persistence
+   - Keyboard accessible (Tab + Enter)
+
+✓ Testing Results:
+   - Functionality: ✓ Perfect
+   - Responsiveness: ✓ Mobile, tablet, desktop
+   - Accessibility: ✓ WCAG AA compliant (7.1:1 contrast)
+   - Performance: ✓ LCP 1.8s, CLS 0.05
+   - Console: ✓ Zero errors
+   - Iterations: 2 (auto-fixed contrast issue)
+
+📝 Code Changes:
+   - Created: ThemeContext.tsx (45 lines)
+   - Created: Toggle.tsx (67 lines)
+   - Modified: Header.tsx, Button.tsx, Card.tsx, +12 more
+   - Total: 247 lines added, 12 modified
+
+🚀 Status: PRODUCTION READY
+```
+
+**Total Time: ~2 minutes (fully autonomous)**
+
+---
+
+## Key Features
+
+### 1. Closed-Loop Visual Testing
+- Every code change is tested in a real browser
+- Screenshots captured at each step
+- Console output monitored continuously
+- Visual evidence of correctness
+
+### 2. Automatic Iterative Improvement
+- If tests fail, automatically fixes and re-tests
+- Up to 5 iteration cycles
+- Learns from previous attempts
+- Converges to perfection
+
+### 3. Expert Validation
+- Industry-standard validation criteria
+- WCAG 2.1 AA accessibility compliance
+- Core Web Vitals performance targets
+- Security best practices (XSS, CSP)
+- SEO optimization
+
+### 4. Fully Autonomous
+- No human intervention needed
+- Comprehensive planning (10-20 step tasks)
+- Intelligent decision-making
+- Documents assumptions clearly
+- Handles edge cases gracefully
+
+### 5. Parallel Execution
+- UX and SEO agents run simultaneously
+- Multiple independent components in parallel
+- Faster completion times
+
+### 6. Long-Horizon Capability
+- Handles complex, multi-component features
+- Reads entire codebase for context
+- Plans for long-term maintainability
+- Comprehensive testing across all pages/viewports
+
+---
+
+## When to Use This Command
+
+### Perfect For:
+✅ **New Features** - "add user authentication"
+✅ **UI Improvements** - "modernize the landing page"
+✅ **Bug Fixes** - "fix the broken cart calculation"
+✅ **Responsive Issues** - "make the navbar mobile-friendly"
+✅ **Accessibility** - "improve keyboard navigation"
+✅ **Performance** - "optimize image loading"
+✅ **Testing** - "test the entire checkout flow"
+✅ **Refactoring** - "convert class components to hooks"
+
+### Not Ideal For:
+❌ Backend API development (use regular Claude Code)
+❌ Database schema changes (no visual testing needed)
+❌ CLI tool development (no browser)
+❌ Non-visual logic (unit tests better)
+
+---
+
+## Advanced Usage
+
+### Specify Detailed Requirements
+```
+/frontend-dev - create a notification system with:
+- Toast notifications (top-right)
+- 4 types: success, error, warning, info
+- Auto-dismiss after 5 seconds
+- Clickable to dismiss
+- Stack multiple notifications
+- Smooth slide-in animation
+- Accessible (ARIA announcements)
+- Mobile-responsive
+```
+
+The coordinator will:
+1. Parse all requirements
+2. Create comprehensive task list (20+ steps)
+3. Implement all features
+4. Test each notification type
+5. Validate stacking behavior
+6. Check animations
+7. Verify accessibility
+8. Test on mobile
+9. Iterate until perfect
+10. Report with screenshots
+
+### Test Existing Implementation
+```
+/frontend-dev - test the entire application and fix any visual or functional issues
+```
+
+The coordinator will:
+1. Enumerate all pages/routes
+2. Test each page comprehensively
+3. Capture screenshots of all states
+4. Monitor console on every page
+5. Validate accessibility
+6. Check responsive behavior
+7. Generate comprehensive report
+8. Auto-fix any issues found
+9. Re-test after fixes
+10. Final validation
+
+---
+
+## Behind the Scenes: Agent Coordination
+
+### The Master Coordinator
+The `closed-loop-coordinator` agent orchestrates everything:
+
+1. **Plans** - Reads code, creates task list
+2. **Delegates** - Launches specialist agents as needed
+3. **Implements** - Writes clean production code
+4. **Tests** - Uses frontend-tester for visual validation
+5. **Validates** - Uses frontend-validator for quality assurance
+6. **Iterates** - Automatically fixes and re-tests
+7. **Reports** - Provides evidence-based completion summary
+
+### Agent Collaboration
+Agents share context and build on each other's work:
+
+```
+UX Agent → "Use glassmorphism, colors: {palette}"
+   ↓
+Coordinator → Implements design with UX recommendations
+   ↓
+Frontend Tester → Tests in browser, captures screenshots
+   ↓
+Frontend Validator → Analyzes screenshots, validates design
+   ↓
+Coordinator → If issues found, fixes and returns to testing
+   ↓
+Loop until PASS
+```
+
+### Parallel Execution Example
+```
+Coordinator launches simultaneously:
+  - UX Design Specialist (analyze design needs)
+  - SEO Specialist (audit current SEO)
+
+Both complete in parallel (faster than serial).
+
+Then coordinator:
+  - Integrates both recommendations
+  - Implements changes
+  - Proceeds to testing phase
 ```
 
 ---
 
-## Multi-Agent Orchestration
+## Configuration
 
-### When to Launch Each Agent
+### MCP Tools Required
 
-**dev-server-manager:**
-- Every scenario needs this first
-- Ensures dev server is running
-- Returns server URL
+**Playwright (Required)**
+- Package: `@executeautomation/playwright-mcp-server`
+- Used for: Browser automation, screenshots, console monitoring
+- Install: `claude mcp add` → Select Playwright
 
-**frontend-tester:**
-- Scenarios 1, 2, 3 all need this
-- Performs actual browser automation
-- Captures visual evidence
-
-**frontend-validator:**
-- Scenarios 1 and 2 (need validation)
-- Scenario 3 can skip if just reporting findings
-
-### Agent Launch Pattern
-
-```javascript
-// Example Task tool invocation
-Task tool with:
-  subagent_type: "general-purpose"
-  description: "Run visual tests"
-  prompt: `You are the frontend-tester agent.
-
-  [Full agent instructions from agents/frontend-tester.md]
-
-  Your specific task:
-  1. Navigate to http://localhost:3000/dashboard
-  2. Click the "Add Item" button
-  3. Fill the form with test data
-  4. Submit and verify success message
-  5. Capture screenshots at each step
-  6. Return comprehensive report with visual evidence
-
-  Server URL: http://localhost:3000
-  Test Scenario: Add item functionality
-  `
+**Configuration:**
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@executeautomation/playwright-mcp-server"
+      ]
+    }
+  }
+}
 ```
+
+### Optional: Additional MCP Tools (Future)
+
+**Axe-core (Accessibility)**
+- Automated WCAG compliance testing
+- Integration ready, waiting for MCP server
+
+**Lighthouse (Performance)**
+- Core Web Vitals auditing
+- Bundle analysis
+- Integration ready, waiting for MCP server
+
+---
+
+## Troubleshooting
+
+### "Dev server won't start"
+**Symptom:** Error starting server
+
+**Solutions:**
+1. Run `npm install` (missing dependencies)
+2. Check for port conflicts (kill processes on 3000, 5173, etc.)
+3. Fix syntax errors in code
+4. Check `package.json` for dev script
+
+The coordinator will attempt all of these automatically.
+
+### "Tests keep failing"
+**Symptom:** Multiple iterations, still failing
+
+**Causes:**
+- Complex bug requiring deeper analysis
+- Missing dependencies
+- Environment issue
+
+**Action:**
+After 5 failed iterations, the coordinator escalates to you with:
+- Full diagnostic report
+- All screenshots
+- Console logs
+- Suggested next steps
+
+### "Taking too long"
+**Symptom:** Command running over 5 minutes
+
+**Reasons:**
+- Very complex feature (expected)
+- Many iterations needed (quality assurance)
+- Slow dev server startup
+- Large codebase (many files to read)
+
+**Normal:** Complex features can take 3-5 minutes
+**Hang:** If over 10 minutes, check coordinator output for stuck agents
 
 ---
 
 ## Best Practices
 
-### Always:
-- ✅ Use TodoWrite to track progress
-- ✅ Capture screenshots as evidence
-- ✅ Check console for errors
-- ✅ Iterate until tests pass (max iterations to avoid infinite loops)
-- ✅ Present visual evidence to user
+### 1. Be Specific in Requirements
+```
+Good: "Add a search bar with autocomplete, debounced input, and keyboard navigation"
+Bad: "Add search"
+```
 
-### Never:
-- ❌ Skip visual testing phase
-- ❌ Assume tests pass without validation
-- ❌ Ignore console errors
-- ❌ Loop infinitely on failures
-- ❌ Forget to report back to user
+More details = better results.
 
-### Error Handling:
-- If dev server won't start → Report to user with error details
-- If browser automation fails → Try alternative approach or report
-- If tests keep failing → Report after max iterations, don't loop forever
-- If agents return errors → Show user the error, ask for guidance
+### 2. Let It Iterate
+Don't interrupt during iterations. The closed-loop will:
+- Find issues automatically (via screenshots/console)
+- Fix them automatically
+- Re-test to confirm fix
+- Repeat until perfect
 
----
+### 3. Trust the Visual Evidence
+The coordinator shows screenshots proving:
+- Feature works as expected
+- No visual glitches
+- Responsive design works
+- Console is clean
 
-## Success Criteria
+### 4. Review the Task List
+The coordinator creates a detailed task list. Review it to understand:
+- What will be done
+- How complex the work is
+- Estimated scope
 
-**Scenario 1 (Auto):**
-- Tests run automatically without user intervention
-- Results reported concisely
-- Fixes applied if issues found
-
-**Scenario 2 (Development):**
-- Feature implemented as requested
-- Visual tests pass
-- No console errors
-- User is satisfied
-
-**Scenario 3 (Testing):**
-- Comprehensive test results provided
-- Visual evidence included
-- Issues clearly identified
-- User can make informed decisions
+### 5. Use for Complex Features
+This command shines on complex work:
+- Multi-component features
+- Full-page implementations
+- Cross-cutting concerns (themes, i18n)
+- Bug hunts across multiple pages
 
 ---
 
-## Example Conversations
+## Examples
 
-### Example 1: Automatic (Hook-Triggered)
+### Example 1: Responsive Navbar
+```
+User: /frontend-dev - make the navbar responsive with a hamburger menu on mobile
+
+Coordinator:
+1. Plans 12 tasks
+2. Reads Navbar.tsx and related files
+3. Gets UX recommendations (modern hamburger animation)
+4. Implements responsive breakpoints
+5. Creates hamburger menu component
+6. Adds slide-out drawer for mobile
+7. Tests on desktop (1920px) - Screenshot ✓
+8. Tests on tablet (768px) - Screenshot ✓
+9. Tests on mobile (375px) - Screenshot ✓
+10. Validates smooth animation - PASS ✓
+11. Checks accessibility (keyboard nav) - PASS ✓
+12. Reports completion with 9 screenshots
+```
+
+### Example 2: Form Validation
+```
+User: /frontend-dev - add comprehensive form validation to the signup form
+
+Coordinator:
+1. Plans 18 tasks
+2. Reads SignupForm.tsx
+3. Implements validations:
+   - Email format (regex)
+   - Password strength (8+ chars, uppercase, number, symbol)
+   - Password confirmation match
+   - Username availability (API call)
+   - Terms acceptance (checkbox required)
+4. Tests happy path - Screenshot ✓
+5. Tests each validation (5 test cases) - 5 Screenshots
+6. Finds issue: Error messages overlap on mobile - FAIL
+7. Iteration 1: Fixes spacing
+8. Re-tests mobile - Screenshot ✓ - PASS
+9. Validates accessibility (errors announced to screen readers) - PASS ✓
+10. Reports completion with 8 screenshots
+```
+
+### Example 3: Performance Optimization
+```
+User: /frontend-dev - optimize the homepage for better Core Web Vitals
+
+Coordinator:
+1. Plans 15 tasks
+2. Runs frontend-tester with performance metrics
+3. Identifies issues:
+   - LCP: 4.2s (poor, target < 2.5s)
+   - CLS: 0.15 (needs improvement, target < 0.1)
+   - Large hero image (1.8 MB)
+4. Gets SEO specialist recommendations
+5. Implements fixes:
+   - Convert hero image to WebP (800KB → 180KB)
+   - Add lazy loading for below-fold images
+   - Set explicit dimensions to prevent CLS
+   - Preload critical assets
+6. Tests again - New metrics:
+   - LCP: 1.9s ✓ (improved by 2.3s)
+   - CLS: 0.04 ✓ (improved by 0.11)
+7. Validates - PASS ✓
+8. Reports 65% performance improvement with before/after screenshots
+```
+
+---
+
+## Why This Command is Powerful
+
+### 1. Visual Feedback Loop
+You don't just get "tests passed" - you get **screenshots** proving it works.
+
+### 2. Autonomous Problem Solving
+Finds issues (console errors, visual bugs) and **fixes them automatically**.
+
+### 3. Production-Ready Output
+Code that passes:
+- Visual correctness ✓
+- Functionality ✓
+- Accessibility (WCAG AA) ✓
+- Performance (Core Web Vitals) ✓
+- No console errors ✓
+- Responsive design ✓
+
+### 4. Evidence-Based Decisions
+Every decision backed by:
+- Screenshots (visual proof)
+- Console logs (error proof)
+- Test reports (functional proof)
+- Validation scores (quality proof)
+
+### 5. Learning System
+Each iteration improves based on previous feedback. The coordinator:
+- Remembers what didn't work
+- Tries different approaches
+- Converges to best solution
+- Documents reasoning
+
+---
+
+## Architecture
 
 ```
-[Hook triggers: /frontend-dev-auto]
+┌─────────────────────────────────────────────────────────┐
+│                    /frontend-dev                        │
+│                  (Slash Command)                        │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│           Closed-Loop Coordinator Agent                 │
+│  (Master Orchestrator - Brain of the Operation)         │
+│                                                          │
+│  • Parses intent & plans comprehensively                │
+│  • Coordinates all 5 agents                             │
+│  • Implements code changes                              │
+│  • Manages closed-loop feedback                         │
+│  • Decides iterations                                   │
+└──┬──────┬──────┬──────┬──────┬───────────────────────────┘
+   │      │      │      │      │
+   ▼      ▼      ▼      ▼      ▼
+┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐
+│ UX  ││Test ││Valid││ SEO ││Dev  │
+│Des. ││Agent││Agent││Spec ││Srv  │
+└─────┘└─────┘└─────┘└─────┘└─────┘
+   │      │      │      │      │
+   │      └──┬───┴──────┘      │
+   │         │                 │
+   ▼         ▼                 ▼
+┌──────────────────────────────────┐
+│    Real Browser (Playwright)     │
+│  • Navigate pages                │
+│  • Capture screenshots           │
+│  • Monitor console               │
+│  • Test interactions             │
+└──────────────────────────────────┘
+            │
+            ▼
+┌──────────────────────────────────┐
+│  Visual Evidence (Screenshots)   │
+│  Console Logs (Errors/Warnings)  │
+│  Performance Metrics             │
+└──────────────────────────────────┘
+            │
+            ▼
+    ┌───────────────┐
+    │  Validation   │
+    │  PASS / FAIL  │
+    └───────┬───────┘
+            │
+     ┌──────┴──────┐
+     ▼             ▼
+   PASS         FAIL
+     │             │
+     │             ▼
+     │        ┌────────┐
+     │        │  Fix   │
+     │        └───┬────┘
+     │            │
+     │            ▼
+     │      (Re-test Loop)
+     │            │
+     │←───────────┘
+     │
+     ▼
+   Success!
+```
+
+---
+
+## Comparison: Before vs After
+
+### Before (Manual Process)
+```
+1. You write code (30 min)
+2. You start dev server manually (1 min)
+3. You open browser manually (1 min)
+4. You test manually (10 min)
+5. You find bug (screenshot with phone)
+6. You fix bug (10 min)
+7. You test again manually (10 min)
+8. You check accessibility manually (10 min)
+9. You test on mobile manually (10 min)
+10. Hope you didn't miss anything...
+
+Total: ~80 minutes, error-prone
+```
+
+### After (Closed-Loop Automation)
+```
+You: /frontend-dev - add dark mode toggle
+
+Coordinator:
+1. Plans (10s)
+2. Reads code (5s)
+3. Implements (30s)
+4. Starts server (5s)
+5. Tests in browser with screenshots (20s)
+6. Finds contrast issue (validation)
+7. Fixes automatically (5s)
+8. Re-tests (20s)
+9. Validates - PASS ✓
+10. Tests accessibility automatically
+11. Tests all viewports automatically
+12. Reports with visual evidence
+
+Total: ~2 minutes, 40x faster, comprehensive
+```
+
+---
+
+## Future Enhancements
+
+### Planned Integrations
+- **Lighthouse MCP**: Automated performance audits
+- **Axe-core MCP**: Deeper accessibility testing
+- **Visual Regression**: Compare screenshots to baseline
+- **Network Mocking**: Test error states, slow connections
+- **Video Recording**: Record full test sessions
+- **Cross-Browser**: Test on Firefox, Safari, Edge
+
+### Community Contributions Welcome
+Want to add an agent or improve coordination? See `ARCHITECTURE.md` for extension points.
+
+---
+
+## Getting Started
+
+### 1. Install Prerequisites
+```bash
+# Install Playwright MCP server
+claude mcp add
+# Select: @executeautomation/playwright-mcp-server
+
+# Restart Claude Code
+```
+
+### 2. Create a Test Project (Optional)
+```bash
+npm create vite@latest my-app -- --template react
+cd my-app
+npm install
+```
+
+### 3. Use the Command
+```bash
+claude
+
+# In Claude Code:
+/frontend-dev - add a counter button
+```
+
+### 4. Watch the Magic
+The coordinator will:
+- Plan the implementation
+- Write the code
+- Start the dev server
+- Test in the browser
+- Show you screenshots
+- Report completion
+
+---
+
+## Tips for Best Results
+
+1. **Be Specific**: More detail = better results
+2. **Trust the Process**: Let it iterate automatically
+3. **Review Screenshots**: Visual evidence doesn't lie
+4. **Check Task List**: See the plan before execution
+5. **Use for Complex Work**: This is where it shines
+6. **Report Issues**: Help us improve the coordination
+
+---
+
+## Summary
+
+`/frontend-dev` is your **fully autonomous frontend development team** in a single command:
+
+- 🧠 **Intelligent Planning**: Comprehensive task breakdown
+- 💻 **Expert Implementation**: Clean, production-ready code
+- 🌐 **Real Browser Testing**: Screenshots & console monitoring
+- ✅ **Strict Validation**: Industry-standard quality checks
+- 🔄 **Automatic Iteration**: Fixes issues and re-tests
+- 📊 **Evidence-Based**: Visual proof of correctness
+- ⚡ **Parallel Execution**: Faster completion
+- 🚀 **Production-Ready**: Ships with confidence
+
+**Stop manually testing. Start shipping faster.**
+
+---
+
+*Powered by the Closed-Loop Coordinator and 5 Expert Agents*

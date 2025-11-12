@@ -8,9 +8,9 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/hemangjoshi37a/claude-code-frontend-dev?style=for-the-badge)](https://github.com/hemangjoshi37a/claude-code-frontend-dev/stargazers)
 
-**The world's first multimodal AI-powered closed-loop visual testing system for frontend development**
+**The world's first fully autonomous, multi-agent, closed-loop frontend development system with visual feedback**
 
-*Build UIs like a human developer - with eyes, not just code.*
+*Build UIs like a team of expert developers - with vision, coordination, and iterative refinement until perfect.*
 
 [Features](#-features) • [Demo](#-live-demo) • [Installation](#-quick-start) • [How It Works](#-how-it-works) • [Examples](#-examples)
 
@@ -243,44 +243,138 @@ This ONE command smartly handles everything:
 
 ## 🧠 How It Works
 
-### Multi-Agent Architecture
+### Closed-Loop Multi-Agent Architecture
 
 ```
-┌──────────────────────────────────────────────┐
-│  1️⃣  FILE CHANGE DETECTION                  │
-│  Auto-detects edits to .jsx, .tsx, .css... │
-└──────────────┬───────────────────────────────┘
-               │
-               ▼
-┌──────────────────────────────────────────────┐
-│  2️⃣  DEV SERVER MANAGER                      │
-│  • Auto-detects framework (Vite, Next.js)   │
-│  • Starts dev server on available port      │
-│  • Verifies server responds                 │
-└──────────────┬───────────────────────────────┘
-               │
-               ▼
-┌──────────────────────────────────────────────┐
-│  3️⃣  FRONTEND TESTER                         │
-│  • Launches browser (Puppeteer/Playwright)  │
-│  • Clicks, types, scrolls, navigates        │
-│  • Captures screenshots at each step        │
-│  • Monitors console logs/errors             │
-└──────────────┬───────────────────────────────┘
-               │
-               ▼
-┌──────────────────────────────────────────────┐
-│  4️⃣  MULTIMODAL VALIDATOR                    │
-│  • Analyzes screenshots with AI vision      │
-│  • Validates against requirements           │
-│  • Decides: PASS ✅ or FAIL ❌              │
-│  • Provides actionable fix suggestions      │
-└──────────────┬───────────────────────────────┘
-               │
-               ├─ PASS ✅ → Done!
-               │
-               └─ FAIL ❌ → Apply Fixes → Loop to Step 2
+                    ┌─────────────────────────────┐
+                    │   USER COMMAND /frontend-dev   │
+                    │   "add a dark mode toggle"      │
+                    └──────────────┬──────────────────┘
+                                   │
+                                   ▼
+        ┌──────────────────────────────────────────────────────────┐
+        │       CLOSED-LOOP COORDINATOR (Master Orchestrator)       │
+        │   • Parses intent & plans comprehensively (10-20 steps)  │
+        │   • Reads necessary code for context                     │
+        │   • Coordinates 5 specialized agents                     │
+        │   • Implements code changes                              │
+        │   • Manages closed-loop feedback until perfect           │
+        └───┬────────┬────────┬────────┬────────────────────────────┘
+            │        │        │        │
+            │ Parallel Execution   │
+            ▼        ▼        │        │
+        ┌───────┐ ┌───────┐  │        │
+        │ UX    │ │ SEO   │  │        │
+        │Design │ │Spec   │  │        │
+        └───┬───┘ └───┬───┘  │        │
+            │         │       │        │
+            └────┬────┘       │        │
+                 │            │        │
+                 ▼            ▼        ▼
+           [Implement]  [Dev Server] [Test]
+                 │            │        │
+                 ▼            ▼        ▼
+        ┌─────────────────────────────────────┐
+        │  1️⃣  DEV SERVER MANAGER AGENT       │
+        │  • Auto-detects framework           │
+        │  • Starts dev server                │
+        │  • Returns URL: http://localhost:*  │
+        └─────────────┬───────────────────────┘
+                      │
+                      ▼
+        ┌─────────────────────────────────────┐
+        │  2️⃣  FRONTEND TESTER AGENT          │
+        │  • Browser automation (Playwright)  │
+        │  • Captures screenshots (CRITICAL)  │
+        │  • Monitors console (errors/logs)   │
+        │  • Tests all interactions           │
+        │  • Tests all viewports              │
+        └─────────────┬───────────────────────┘
+                      │
+                      ▼
+        ┌─────────────────────────────────────┐
+        │  Visual Evidence + Console Logs      │
+        │  📸 Screenshots at every step        │
+        │  📊 Console output (errors/warnings) │
+        │  ⚡ Performance metrics              │
+        └─────────────┬───────────────────────┘
+                      │
+                      ▼
+        ┌─────────────────────────────────────┐
+        │  3️⃣  FRONTEND VALIDATOR AGENT       │
+        │  • Analyzes screenshots (AI vision) │
+        │  • Validates vs requirements        │
+        │  • Checks console for errors        │
+        │  • Decision: PASS ✅ or FAIL ❌     │
+        │  • Provides specific fixes          │
+        └─────────────┬───────────────────────┘
+                      │
+              ┌───────┴────────┐
+              │                │
+              ▼                ▼
+           PASS ✅          FAIL ❌
+              │                │
+              │                ▼
+              │     ┌──────────────────────┐
+              │     │ Coordinator Applies  │
+              │     │ Fixes Automatically  │
+              │     └──────────┬───────────┘
+              │                │
+              │                ▼
+              │        [Re-test Loop]
+              │       (Up to 5 iterations)
+              │                │
+              │←───────────────┘
+              │
+              ▼
+        ┌─────────────────────────────────────┐
+        │  COMPLETION REPORT                   │
+        │  ✅ Feature implemented & validated  │
+        │  📸 Visual evidence (screenshots)    │
+        │  📝 Code changes summary             │
+        │  🚀 Production-ready                 │
+        └──────────────────────────────────────┘
 ```
+
+### 🤖 The 6-Agent Team
+
+**Closed-Loop Coordinator** (NEW! Master Orchestrator)
+- Plans comprehensive task breakdown (10-20 steps)
+- Reads codebase for full context
+- Coordinates all 5 specialized agents
+- Implements code changes
+- Manages iterative feedback loop
+- Makes autonomous decisions
+- Handles long-horizon tasks (no human intervention)
+
+**UX Design Specialist** (Expert)
+- Modern design trends (glassmorphism, neumorphism)
+- Color theory, typography, spacing
+- Accessibility-aware design recommendations
+
+**Frontend Tester** (Critical for Closed-Loop)
+- Browser automation with Playwright
+- Screenshot capture at EVERY step
+- Console monitoring (errors/warnings)
+- Multi-viewport testing
+- Visual evidence collection
+
+**Frontend Validator** (Quality Gate)
+- Screenshot analysis (AI vision)
+- Requirements validation
+- PASS/FAIL decisions
+- Specific fix recommendations
+
+**SEO Specialist** (Expert)
+- Technical SEO audits
+- Structured data implementation
+- Core Web Vitals optimization
+- Social media optimization
+
+**Dev Server Manager** (Infrastructure)
+- Framework auto-detection
+- Dev server lifecycle management
+- Health monitoring
 
 ### Technology Stack
 
