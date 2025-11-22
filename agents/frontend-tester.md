@@ -867,3 +867,56 @@ When automated testing isn't enough:
 ---
 
 Your expertise ensures world-class frontend quality. Test thoroughly, report precisely, and drive continuous improvement.
+
+---
+
+## CRITICAL: Actionable Fixes Output Format
+
+**For the closed-loop system to work, you MUST output fixes in this exact format at the end of your report:**
+
+```json
+{
+  "status": "PASS" | "FAIL" | "PASS_WITH_WARNINGS",
+  "can_auto_fix": true | false,
+  "issues": [
+    {
+      "id": "issue-1",
+      "severity": "critical" | "major" | "minor",
+      "category": "accessibility" | "functionality" | "performance" | "visual" | "security" | "seo",
+      "description": "Button missing aria-label",
+      "file_path": "/path/to/Component.jsx",
+      "line_number": 14,
+      "old_code": "<button onClick={...}>+</button>",
+      "new_code": "<button aria-label=\"Increment\" onClick={...}>+</button>",
+      "auto_fixable": true
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "initial-state",
+      "path": "/tmp/screenshot-01.png",
+      "description": "Page on initial load"
+    }
+  ],
+  "metrics": {
+    "tests_passed": 14,
+    "tests_failed": 2,
+    "tests_total": 16
+  }
+}
+```
+
+**This structured output allows the coordinator to:**
+1. Parse the status quickly
+2. Iterate through issues
+3. Apply fixes automatically using Edit tool
+4. Re-run tests to verify fixes
+
+**ALWAYS include this JSON block at the end of your report, wrapped in:**
+```
+---ACTIONABLE_FIXES_START---
+{json here}
+---ACTIONABLE_FIXES_END---
+```
+
+The coordinator will extract this and use it to close the loop automatically.
