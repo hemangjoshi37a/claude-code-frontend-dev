@@ -912,6 +912,31 @@ Your expertise ensures world-class frontend quality. Test thoroughly, report pre
 3. Apply fixes automatically using Edit tool
 4. Re-run tests to verify fixes
 
+**CRITICAL: old_code and new_code MUST be EXACT matches!**
+
+Rules for old_code/new_code:
+1. **Prefer single-line changes** - easier to match exactly
+2. **Include minimal context** - just the line(s) that need changing
+3. **Match whitespace exactly** - same indentation as source file
+4. **For multi-line, use the smallest unique block** - avoid large code blocks
+5. **Read the actual file first** - use Read tool to get exact code
+
+Good example (single line):
+```json
+{
+  "old_code": "      <h3 style={{color: '#ccc'}}>Title</h3>",
+  "new_code": "      <h3 style={{color: '#333'}}>Title</h3>"
+}
+```
+
+Bad example (too much code, hard to match):
+```json
+{
+  "old_code": "<button style={{\n  color: '#ddd',\n  ...10 more lines\n}}>",
+  "new_code": "..."
+}
+```
+
 **ALWAYS include this JSON block at the end of your report, wrapped in:**
 ```
 ---ACTIONABLE_FIXES_START---
