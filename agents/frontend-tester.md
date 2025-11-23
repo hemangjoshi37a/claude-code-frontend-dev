@@ -915,11 +915,16 @@ Your expertise ensures world-class frontend quality. Test thoroughly, report pre
 **CRITICAL: old_code and new_code MUST be EXACT matches!**
 
 Rules for old_code/new_code:
-1. **Prefer single-line changes** - easier to match exactly
-2. **Include minimal context** - just the line(s) that need changing
-3. **Match whitespace exactly** - same indentation as source file
-4. **For multi-line, use the smallest unique block** - avoid large code blocks
-5. **Read the actual file first** - use Read tool to get exact code
+1. **old_code MUST be UNIQUE in the file** - Edit tool needs unique match!
+2. **Prefer single-line changes** - easier to match exactly
+3. **Include enough context for uniqueness** - if line appears multiple times, include surrounding unique text
+4. **Match whitespace exactly** - same indentation as source file
+5. **Read the actual file first** - use Read tool to verify uniqueness
+
+**UNIQUENESS IS CRITICAL:**
+- If `"}}>` appears 5 times, don't use it alone
+- Instead use the full line: `      }} aria-label="Increment">`
+- Or include preceding unique content
 
 Good example (single line):
 ```json
@@ -929,11 +934,20 @@ Good example (single line):
 }
 ```
 
-Bad example (too much code, hard to match):
+Bad example (not unique - appears multiple times):
 ```json
 {
-  "old_code": "<button style={{\n  color: '#ddd',\n  ...10 more lines\n}}>",
-  "new_code": "..."
+  "old_code": "      }}>",
+  "new_code": "      }} aria-label=\"Increment\">"
+}
+```
+This will FAIL because `}}>` appears in multiple buttons!
+
+Better: Include the unique preceding line:
+```json
+{
+  "old_code": "        cursor: 'pointer'\n      }}>",
+  "new_code": "        cursor: 'pointer'\n      }} aria-label=\"Increment\">"
 }
 ```
 
