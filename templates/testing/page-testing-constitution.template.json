@@ -1,0 +1,333 @@
+{
+  "$schema": "../schemas/testing-constitution.schema.json",
+  "version": "1.0.0",
+  "pageName": "",
+  "pageUrl": "",
+  "description": "",
+  "createdAt": "",
+  "lastUpdated": "",
+  "priority": "high",
+
+  "_metadata": {
+    "autoUpdatesEnabled": true,
+    "maxAutoUpdatesPerSession": 10,
+    "requireManualReviewAfter": 5,
+    "healthScore": 100,
+    "lastHealthCheck": ""
+  },
+
+  "updateHistory": [
+    {
+      "version": "1.0.0",
+      "timestamp": "",
+      "updatedBy": "manual",
+      "changes": ["Initial creation"],
+      "reason": "Constitution created"
+    }
+  ],
+
+  "features": {
+    "primary": [
+      {
+        "name": "",
+        "description": "",
+        "selector": "",
+        "testType": "functional",
+        "required": true,
+        "acceptanceCriteria": []
+      }
+    ],
+    "secondary": []
+  },
+
+  "interactiveElements": {
+    "buttons": [
+      {
+        "name": "",
+        "selector": "",
+        "action": "click",
+        "expectedBehavior": "",
+        "testCases": [
+          {
+            "scenario": "normal_click",
+            "expectedResult": ""
+          },
+          {
+            "scenario": "disabled_state",
+            "expectedResult": ""
+          }
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "name": "",
+        "selector": "",
+        "fields": [
+          {
+            "name": "",
+            "selector": "",
+            "type": "text",
+            "required": true,
+            "validation": {
+              "minLength": null,
+              "maxLength": null,
+              "pattern": null,
+              "customValidation": null
+            },
+            "testValues": {
+              "valid": [],
+              "invalid": [],
+              "edgeCases": []
+            }
+          }
+        ],
+        "submitButton": "",
+        "successIndicator": "",
+        "errorIndicator": ""
+      }
+    ],
+    "links": [
+      {
+        "name": "",
+        "selector": "",
+        "destination": "",
+        "opensNewTab": false
+      }
+    ],
+    "dropdowns": [
+      {
+        "name": "",
+        "selector": "",
+        "options": [],
+        "defaultValue": ""
+      }
+    ],
+    "modals": [
+      {
+        "name": "",
+        "triggerSelector": "",
+        "modalSelector": "",
+        "closeSelector": "",
+        "testCases": ["open", "close", "escape_key", "outside_click"]
+      }
+    ],
+    "tabs": [
+      {
+        "name": "",
+        "tabSelector": "",
+        "contentSelector": "",
+        "tabs": []
+      }
+    ]
+  },
+
+  "visualElements": {
+    "graphs": [
+      {
+        "name": "",
+        "selector": "",
+        "type": "line|bar|pie|area|scatter",
+        "dataSource": "",
+        "testCases": [
+          "renders_correctly",
+          "handles_empty_data",
+          "handles_large_dataset",
+          "tooltip_on_hover",
+          "legend_visibility"
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "name": "",
+        "selector": "",
+        "features": {
+          "sorting": false,
+          "pagination": false,
+          "filtering": false,
+          "selection": false
+        },
+        "testCases": []
+      }
+    ],
+    "images": [
+      {
+        "name": "",
+        "selector": "",
+        "altTextRequired": true,
+        "lazyLoading": false
+      }
+    ],
+    "icons": [],
+    "animations": [
+      {
+        "name": "",
+        "selector": "",
+        "trigger": "load|hover|click|scroll",
+        "reducedMotion": true
+      }
+    ]
+  },
+
+  "layout": {
+    "sections": [
+      {
+        "name": "header",
+        "selector": "header, .header, [role='banner']",
+        "required": true
+      },
+      {
+        "name": "navigation",
+        "selector": "nav, .nav, [role='navigation']",
+        "required": true
+      },
+      {
+        "name": "main_content",
+        "selector": "main, .main, [role='main']",
+        "required": true
+      },
+      {
+        "name": "sidebar",
+        "selector": "aside, .sidebar, [role='complementary']",
+        "required": false
+      },
+      {
+        "name": "footer",
+        "selector": "footer, .footer, [role='contentinfo']",
+        "required": true
+      }
+    ],
+    "responsiveBreakpoints": {
+      "mobile": "375px",
+      "tablet": "768px",
+      "laptop": "1024px",
+      "desktop": "1440px"
+    },
+    "criticalViewports": ["mobile", "desktop"]
+  },
+
+  "stateManagement": {
+    "loadingStates": [
+      {
+        "name": "",
+        "selector": "",
+        "duration": "< 3s"
+      }
+    ],
+    "errorStates": [
+      {
+        "name": "",
+        "selector": "",
+        "recoveryAction": ""
+      }
+    ],
+    "emptyStates": [
+      {
+        "name": "",
+        "selector": "",
+        "message": ""
+      }
+    ],
+    "successStates": []
+  },
+
+  "dataFlow": {
+    "apiEndpoints": [
+      {
+        "name": "",
+        "method": "GET",
+        "url": "",
+        "expectedStatus": 200,
+        "mockData": null
+      }
+    ],
+    "realTimeUpdates": {
+      "enabled": false,
+      "type": "websocket|sse|polling",
+      "testCases": []
+    }
+  },
+
+  "accessibility": {
+    "wcagLevel": "AA",
+    "requirements": [
+      "All interactive elements keyboard accessible",
+      "Proper heading hierarchy",
+      "Sufficient color contrast (4.5:1)",
+      "Focus indicators visible",
+      "Alt text for images",
+      "ARIA labels where needed",
+      "Skip links for navigation"
+    ],
+    "screenReaderFlow": [],
+    "keyboardNavigation": {
+      "tabOrder": [],
+      "shortcuts": []
+    }
+  },
+
+  "performance": {
+    "metrics": {
+      "lcp": "< 2.5s",
+      "fid": "< 100ms",
+      "cls": "< 0.1",
+      "ttfb": "< 600ms"
+    },
+    "budgets": {
+      "pageSize": "< 1MB",
+      "jsSize": "< 300KB",
+      "cssSize": "< 100KB",
+      "imageSize": "< 500KB"
+    }
+  },
+
+  "testingOrder": {
+    "sequence": [
+      {
+        "step": 1,
+        "action": "page_load",
+        "validation": ["no_console_errors", "all_sections_visible", "performance_metrics"]
+      },
+      {
+        "step": 2,
+        "action": "visual_inspection",
+        "validation": ["layout_correct", "responsive_design", "no_visual_bugs"]
+      },
+      {
+        "step": 3,
+        "action": "interactive_testing",
+        "validation": ["all_buttons_work", "forms_validate", "navigation_works"]
+      },
+      {
+        "step": 4,
+        "action": "accessibility_testing",
+        "validation": ["keyboard_navigation", "screen_reader", "color_contrast"]
+      },
+      {
+        "step": 5,
+        "action": "edge_case_testing",
+        "validation": ["error_handling", "empty_states", "loading_states"]
+      }
+    ]
+  },
+
+  "knownIssues": [],
+  "skipTests": [],
+  "customTests": [],
+
+  "_selfHealing": {
+    "enabled": true,
+    "statistics": {
+      "totalAutoFixes": 0,
+      "selectorFixes": 0,
+      "behaviorFixes": 0,
+      "elementsAdded": 0,
+      "elementsRemoved": 0,
+      "lastAutoFix": null
+    },
+    "pendingReview": [],
+    "failedElements": [],
+    "alternativeSelectors": {}
+  }
+}

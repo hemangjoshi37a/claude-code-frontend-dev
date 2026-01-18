@@ -1,0 +1,124 @@
+{
+  "$schema": "../schemas/memory-config.schema.json",
+  "version": "1.0.0",
+  "name": "Frontend Dev Visual Memory Configuration",
+  "description": "Configuration for memvid-based visual and chronological memory system",
+
+  "memvid": {
+    "enabled": true,
+    "memoryFile": ".frontend-dev/memory/frontend-tests.mv2",
+    "description": "Single portable file containing all test memory, screenshots metadata, and search indices"
+  },
+
+  "storage": {
+    "basePath": ".frontend-dev/memory",
+    "memoryFiles": {
+      "tests": "frontend-tests.mv2",
+      "screenshots": "screenshots.mv2",
+      "sessions": "sessions.mv2"
+    },
+    "screenshotDir": ".frontend-dev/memory/screenshots",
+    "retention": {
+      "keepDays": 30,
+      "maxFileSize": "500MB"
+    }
+  },
+
+  "mcpTools": {
+    "available": [
+      {
+        "name": "create_or_open_memory",
+        "description": "Initialize or access project memory file (.mv2)",
+        "usage": "Call at session start to initialize memory"
+      },
+      {
+        "name": "add_content",
+        "description": "Store text documents, code snippets, test results, and metadata",
+        "usage": "Store test results, screenshots paths, timeline events"
+      },
+      {
+        "name": "search_memory",
+        "description": "Query memory using hybrid search (lexical + semantic)",
+        "usage": "Find previous test results, compare with baselines, query='*' lists all"
+      },
+      {
+        "name": "ask_memory",
+        "description": "Natural language queries about stored data (requires OpenAI API key)",
+        "usage": "Ask questions like 'What tests failed last week?'"
+      }
+    ]
+  },
+
+  "dataSchema": {
+    "testResult": {
+      "type": "test_result",
+      "fields": {
+        "sessionId": "string - unique session identifier",
+        "timestamp": "ISO 8601 timestamp",
+        "page": "page name being tested",
+        "viewport": "desktop|tablet|mobile",
+        "status": "pass|fail|error",
+        "score": "number 0-100",
+        "issues": "array of issue objects",
+        "screenshotPath": "path to screenshot file",
+        "consoleErrors": "array of console errors",
+        "constitutionUsed": "path to constitution file"
+      }
+    },
+    "timelineEvent": {
+      "type": "timeline_event",
+      "fields": {
+        "timestamp": "ISO 8601 timestamp",
+        "eventType": "test_start|test_pass|test_fail|screenshot|code_change|iteration",
+        "sessionId": "string",
+        "page": "string",
+        "details": "object with event-specific data"
+      }
+    },
+    "screenshot": {
+      "type": "screenshot_metadata",
+      "fields": {
+        "path": "file path to PNG",
+        "page": "page name",
+        "viewport": "viewport size",
+        "timestamp": "ISO 8601 timestamp",
+        "testPhase": "string",
+        "isBaseline": "boolean"
+      }
+    }
+  },
+
+  "usage": {
+    "initialization": {
+      "description": "Initialize memory at start of testing session",
+      "example": "create_or_open_memory with project name 'frontend-tests'"
+    },
+    "storageTestResult": {
+      "description": "Store test results after each test run",
+      "example": "add_content with test result JSON and tags for page, status, date"
+    },
+    "queryHistory": {
+      "description": "Query previous test results",
+      "example": "search_memory with query 'dashboard tests failed' or '*' for all"
+    },
+    "compareBaselines": {
+      "description": "Find baseline screenshots for comparison",
+      "example": "search_memory with query 'baseline screenshot dashboard desktop'"
+    }
+  },
+
+  "integration": {
+    "withConstitutions": {
+      "description": "Memory stores which constitution was used for each test",
+      "benefit": "Track test coverage and constitution effectiveness over time"
+    },
+    "withScreenshots": {
+      "description": "Screenshot files stored on disk, metadata/paths stored in memvid",
+      "benefit": "Fast search of screenshot metadata, actual images accessible via path"
+    },
+    "withTimeline": {
+      "description": "All events stored with timestamps for chronological querying",
+      "benefit": "Reconstruct test history, understand what happened when"
+    }
+  }
+}

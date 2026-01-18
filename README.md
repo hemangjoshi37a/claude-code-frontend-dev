@@ -8,11 +8,11 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/hemangjoshi37a/claude-code-frontend-dev?style=for-the-badge)](https://github.com/hemangjoshi37a/claude-code-frontend-dev/stargazers)
 
-**The world's first fully autonomous, multi-agent, closed-loop frontend development system with visual feedback**
+**The world's first fully autonomous, multi-agent, closed-loop frontend development system with visual feedback, testing constitutions, and visual memory**
 
-*Build UIs like a team of expert developers - with vision, coordination, and iterative refinement until perfect.*
+*Build UIs like a team of expert developers - with vision, coordination, memory, and iterative refinement until perfect.*
 
-[Features](#-features) • [Demo](#-live-demo) • [Installation](#-quick-start) • [How It Works](#-how-it-works) • [Examples](#-examples)
+[Features](#-features) • [Demo](#-live-demo) • [Installation](#-quick-start) • [Constitutions](#-testing-constitutions) • [Visual Memory](#-visual-memory) • [Examples](#-examples)
 
 </div>
 
@@ -128,6 +128,28 @@ But **10x faster** and **never gets tired**.
     - 🚀 Deployment checklist
     - 🚀 Pre-launch verification
     - 🚀 Monitoring configuration
+
+11. **Testing Constitutions** ⭐ NEW
+    - 📋 Page-specific testing configurations
+    - 📋 Define features, buttons, forms, graphs to test
+    - 📋 Custom acceptance criteria per page
+    - 📋 Reusable test definitions across sessions
+    - 📋 Auto-discovery of page elements
+
+12. **Visual Memory (MemVid MCP)** ⭐ NEW
+    - 🧠 Chronological test history
+    - 🧠 Screenshot storage and retrieval
+    - 🧠 Visual regression baselines
+    - 🧠 Cross-session learning
+    - 🧠 Timeline-based event tracking
+
+13. **Authentication Testing** ⭐ NEW
+    - 🔐 Login constitution files
+    - 🔐 Credential management (env vars)
+    - 🔐 Form validation testing
+    - 🔐 Security testing (CSRF, XSS, rate limiting)
+    - 🔐 Session persistence testing
+    - 🔐 OAuth/SSO flow support
 
 ### 🎯 Expert Validation System
 
@@ -336,7 +358,7 @@ This ONE command smartly handles everything:
         └──────────────────────────────────────┘
 ```
 
-### 🤖 The 6-Agent Team
+### 🤖 The 8-Agent Team
 
 **Closed-Loop Coordinator** (NEW! Master Orchestrator)
 - Plans comprehensive task breakdown (10-20 steps)
@@ -375,6 +397,19 @@ This ONE command smartly handles everything:
 - Framework auto-detection
 - Dev server lifecycle management
 - Health monitoring
+
+**Project Config Manager** ⭐ NEW (Configuration)
+- Initialize `.frontend-dev/` directory
+- Load/create testing constitutions
+- Manage login constitutions
+- Auto-discover page elements
+
+**Auth Tester** ⭐ NEW (Authentication)
+- Comprehensive login flow testing
+- Security testing (CSRF, XSS, SQL injection)
+- Session management validation
+- OAuth/SSO flow support
+- Accessibility testing for auth forms
 
 ### Technology Stack
 
@@ -485,6 +520,222 @@ This ONE command smartly handles everything:
 - 💡 Suggests: Use `color: #FFFFFF` with darker background, or switch to high-contrast color
 - 🔧 Auto-fixes color
 - ✅ Re-validates
+
+---
+
+## 📋 Testing Constitutions
+
+Testing constitutions are JSON configuration files that define **what** and **how** to test for each page in your project.
+
+### Directory Structure
+
+When you run `/frontend-dev`, it creates a `.frontend-dev/` directory in your project:
+
+```
+your-project/
+├── .frontend-dev/                    # Created automatically
+│   ├── config.json                   # Project settings
+│   ├── auth/
+│   │   └── login-constitution.json   # Login page testing config
+│   ├── testing/
+│   │   ├── homepage.json             # Homepage testing constitution
+│   │   ├── dashboard.json            # Dashboard testing constitution
+│   │   └── settings.json             # Settings page constitution
+│   ├── memory/                       # MemVid visual memory
+│   │   ├── sessions/
+│   │   ├── screenshots/
+│   │   └── timeline.json
+│   └── reports/                      # Historical test reports
+```
+
+### Testing Constitution Example
+
+```json
+{
+  "pageName": "Dashboard",
+  "pageUrl": "/dashboard",
+  "features": {
+    "primary": [
+      {
+        "name": "Revenue Chart",
+        "selector": "#revenue-chart",
+        "testType": "visual",
+        "acceptanceCriteria": [
+          "Chart renders with data",
+          "Tooltips show on hover",
+          "Legend is visible"
+        ]
+      }
+    ]
+  },
+  "interactiveElements": {
+    "buttons": [
+      {
+        "name": "Export Data",
+        "selector": "[data-testid='export-btn']",
+        "expectedBehavior": "Opens export modal"
+      }
+    ],
+    "forms": [
+      {
+        "name": "Date Range Filter",
+        "selector": "#date-filter-form",
+        "fields": [...]
+      }
+    ]
+  },
+  "visualElements": {
+    "graphs": [
+      {
+        "name": "Revenue Chart",
+        "selector": "#revenue-chart",
+        "type": "line",
+        "testCases": ["renders_correctly", "handles_empty_data"]
+      }
+    ]
+  },
+  "accessibility": {
+    "wcagLevel": "AA",
+    "requirements": [
+      "All charts have aria-labels",
+      "Keyboard navigation works"
+    ]
+  }
+}
+```
+
+### Login Constitution Example
+
+```json
+{
+  "loginPage": {
+    "url": "/login"
+  },
+  "authMethod": {
+    "type": "form"
+  },
+  "credentials": {
+    "storage": "environment",
+    "envVars": {
+      "username": "TEST_USER",
+      "password": "TEST_PASS"
+    }
+  },
+  "loginForm": {
+    "selectors": {
+      "usernameField": "#email",
+      "passwordField": "#password",
+      "submitButton": "#login-btn"
+    }
+  },
+  "successIndicators": {
+    "redirectUrl": "/dashboard",
+    "elements": [".user-menu", ".logout-btn"]
+  },
+  "testScenarios": {
+    "required": [
+      {"name": "valid_login", "priority": "critical"},
+      {"name": "invalid_password", "priority": "high"},
+      {"name": "empty_fields", "priority": "high"}
+    ]
+  },
+  "security": {
+    "tests": ["csrf_protection", "rate_limiting", "xss_prevention"]
+  }
+}
+```
+
+### Benefits of Constitutions
+
+- **Consistency**: Same tests run every time
+- **Reusability**: Define once, test forever
+- **Completeness**: Never forget to test important features
+- **Documentation**: Constitutions serve as test specs
+- **Auto-Discovery**: AI can create constitutions by analyzing pages
+
+---
+
+## 🧠 Visual Memory (MemVid MCP)
+
+Visual memory allows the testing system to **remember** previous test runs and compare results over time.
+
+### How It Works
+
+```
+Test Run 1 → Screenshots Stored → Timeline Updated
+    ↓
+Test Run 2 → Compare with Previous → Detect Regressions
+    ↓
+Test Run 3 → Learn from History → Smarter Testing
+```
+
+### Memory Features
+
+**1. Screenshot Storage**
+- Every screenshot is stored with metadata
+- Organized by page, viewport, and timestamp
+- Easy retrieval for comparison
+
+**2. Chronological Timeline**
+```json
+{
+  "events": [
+    {
+      "timestamp": "2025-01-18T10:30:00Z",
+      "type": "test_start",
+      "page": "dashboard",
+      "sessionId": "abc123"
+    },
+    {
+      "timestamp": "2025-01-18T10:30:15Z",
+      "type": "screenshot",
+      "page": "dashboard",
+      "viewport": "desktop",
+      "path": "screenshots/dashboard-desktop-001.png"
+    },
+    {
+      "timestamp": "2025-01-18T10:30:30Z",
+      "type": "test_pass",
+      "page": "dashboard",
+      "score": 98
+    }
+  ]
+}
+```
+
+**3. Visual Regression Detection**
+- Compare current screenshots with baselines
+- Detect unintended visual changes
+- Highlight differences automatically
+
+**4. Cross-Session Learning**
+- Remember what failed before
+- Avoid repeating same mistakes
+- Build testing knowledge over time
+
+### MemVid MCP Integration
+
+The system uses [memvid-mcp-server](https://github.com/khgs2411/memvid_mcp) for visual memory:
+
+```json
+{
+  "mcpServers": {
+    "memvid": {
+      "command": "npx",
+      "args": ["-y", "memvid-mcp-server@latest"],
+      "env": {
+        "MEMVID_LOCAL_STORAGE": "1"
+      }
+    }
+  }
+}
+```
+
+**Available Tools:**
+- `create_or_open_memory` - Initialize/access project memory (.mv2 file)
+- `add_content` - Store test results, screenshots metadata, timeline events
+- `search_memory` - Hybrid search (query="*" lists all items)
+- `ask_memory` - Natural language queries (requires OpenAI API key)
 
 ---
 

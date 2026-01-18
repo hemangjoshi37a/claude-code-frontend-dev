@@ -1,0 +1,226 @@
+{
+  "$schema": "../schemas/login-constitution.schema.json",
+  "version": "1.0.0",
+  "name": "Login Constitution",
+  "description": "Authentication and login page testing configuration",
+  "createdAt": "",
+  "lastUpdated": "",
+
+  "_metadata": {
+    "autoUpdatesEnabled": true,
+    "maxAutoUpdatesPerSession": 10,
+    "healthScore": 100,
+    "lastHealthCheck": ""
+  },
+
+  "updateHistory": [
+    {
+      "version": "1.0.0",
+      "timestamp": "",
+      "updatedBy": "manual",
+      "changes": ["Initial creation"],
+      "reason": "Constitution created"
+    }
+  ],
+
+  "loginPage": {
+    "url": "/login",
+    "fullUrl": null,
+    "description": "Main login page for user authentication"
+  },
+
+  "authMethod": {
+    "type": "form",
+    "options": ["form", "oauth", "sso", "magic-link", "passwordless", "mfa"],
+    "providers": []
+  },
+
+  "credentials": {
+    "testUsers": [
+      {
+        "role": "admin",
+        "username": "",
+        "password": "",
+        "description": "Admin test account"
+      },
+      {
+        "role": "user",
+        "username": "",
+        "password": "",
+        "description": "Regular user test account"
+      }
+    ],
+    "storage": "environment",
+    "envVars": {
+      "username": "TEST_USERNAME",
+      "password": "TEST_PASSWORD"
+    }
+  },
+
+  "loginForm": {
+    "selectors": {
+      "usernameField": "input[name='email'], input[name='username'], #email, #username",
+      "passwordField": "input[name='password'], input[type='password'], #password",
+      "submitButton": "button[type='submit'], input[type='submit'], .login-btn",
+      "rememberMe": "input[name='remember'], #remember-me",
+      "forgotPassword": "a[href*='forgot'], .forgot-password",
+      "signupLink": "a[href*='signup'], a[href*='register'], .signup-link"
+    },
+    "validation": {
+      "requiredFields": ["username", "password"],
+      "emailFormat": true,
+      "minPasswordLength": 8
+    }
+  },
+
+  "successIndicators": {
+    "redirectUrl": "/dashboard",
+    "redirectPatterns": ["/dashboard", "/home", "/app"],
+    "elements": [".user-menu", ".logout-btn", "[data-testid='user-avatar']"],
+    "cookies": ["session", "auth_token"],
+    "localStorage": ["user", "token"]
+  },
+
+  "failureIndicators": {
+    "errorMessages": [
+      "Invalid credentials",
+      "Wrong password",
+      "User not found",
+      "Account locked"
+    ],
+    "errorSelectors": [".error-message", ".alert-danger", "[role='alert']"],
+    "remainOnPage": true
+  },
+
+  "testScenarios": {
+    "required": [
+      {
+        "name": "valid_login",
+        "description": "Login with valid credentials",
+        "priority": "critical",
+        "steps": [
+          "Navigate to login page",
+          "Enter valid username",
+          "Enter valid password",
+          "Click submit",
+          "Verify redirect to dashboard"
+        ]
+      },
+      {
+        "name": "invalid_password",
+        "description": "Login with invalid password",
+        "priority": "high",
+        "steps": [
+          "Navigate to login page",
+          "Enter valid username",
+          "Enter invalid password",
+          "Click submit",
+          "Verify error message displayed"
+        ]
+      },
+      {
+        "name": "empty_fields",
+        "description": "Submit with empty fields",
+        "priority": "high",
+        "steps": [
+          "Navigate to login page",
+          "Leave fields empty",
+          "Click submit",
+          "Verify validation errors"
+        ]
+      }
+    ],
+    "optional": [
+      {
+        "name": "remember_me",
+        "description": "Test remember me functionality",
+        "priority": "medium"
+      },
+      {
+        "name": "forgot_password",
+        "description": "Test forgot password flow",
+        "priority": "medium"
+      },
+      {
+        "name": "session_persistence",
+        "description": "Test session survives page reload",
+        "priority": "high"
+      },
+      {
+        "name": "logout",
+        "description": "Test logout functionality",
+        "priority": "critical"
+      }
+    ]
+  },
+
+  "security": {
+    "tests": [
+      {
+        "name": "csrf_protection",
+        "description": "Verify CSRF token is present and validated"
+      },
+      {
+        "name": "rate_limiting",
+        "description": "Verify rate limiting after failed attempts",
+        "maxAttempts": 5
+      },
+      {
+        "name": "sql_injection",
+        "description": "Test SQL injection in login fields",
+        "payloads": ["' OR '1'='1", "admin'--", "1; DROP TABLE users"]
+      },
+      {
+        "name": "xss_prevention",
+        "description": "Test XSS prevention in login fields",
+        "payloads": ["<script>alert('xss')</script>", "<img onerror='alert(1)' src='x'>"]
+      }
+    ]
+  },
+
+  "accessibility": {
+    "requirements": [
+      "All form fields have labels",
+      "Error messages are announced to screen readers",
+      "Form is keyboard navigable",
+      "Focus indicators are visible",
+      "Color contrast meets WCAG AA"
+    ]
+  },
+
+  "mfa": {
+    "enabled": false,
+    "methods": ["totp", "sms", "email"],
+    "selectors": {
+      "codeInput": "input[name='mfa_code'], #mfa-code",
+      "submitButton": "button[type='submit']",
+      "resendLink": ".resend-code"
+    }
+  },
+
+  "oauth": {
+    "providers": [],
+    "selectors": {
+      "google": ".google-login, [data-provider='google']",
+      "github": ".github-login, [data-provider='github']",
+      "microsoft": ".microsoft-login, [data-provider='microsoft']"
+    }
+  },
+
+  "_selfHealing": {
+    "enabled": true,
+    "statistics": {
+      "totalAutoFixes": 0,
+      "selectorFixes": 0,
+      "behaviorFixes": 0,
+      "lastAutoFix": null
+    },
+    "pendingReview": [],
+    "failedSelectors": [],
+    "alternativeSelectors": {
+      "usernameField": [],
+      "passwordField": [],
+      "submitButton": []
+    }
+  }
+}

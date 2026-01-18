@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://frontend-dev.claude/schemas/login-constitution.json",
+  "title": "Login Constitution Schema",
+  "description": "Schema for authentication and login page testing configuration",
+  "type": "object",
+  "required": ["version", "name", "loginPage", "authMethod", "successIndicators"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "loginPage": {
+      "type": "object",
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Relative or absolute URL of the login page"
+        },
+        "fullUrl": {
+          "type": ["string", "null"],
+          "format": "uri"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "authMethod": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["form", "oauth", "sso", "magic-link", "passwordless", "mfa"]
+        },
+        "options": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "providers": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "credentials": {
+      "type": "object",
+      "properties": {
+        "testUsers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role"],
+            "properties": {
+              "role": { "type": "string" },
+              "username": { "type": "string" },
+              "password": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "storage": {
+          "type": "string",
+          "enum": ["environment", "config", "vault"]
+        },
+        "envVars": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "loginForm": {
+      "type": "object",
+      "properties": {
+        "selectors": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "requiredFields": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "emailFormat": { "type": "boolean" },
+            "minPasswordLength": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "successIndicators": {
+      "type": "object",
+      "properties": {
+        "redirectUrl": { "type": "string" },
+        "redirectPatterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "elements": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "cookies": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "localStorage": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "failureIndicators": {
+      "type": "object",
+      "properties": {
+        "errorMessages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "errorSelectors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "remainOnPage": { "type": "boolean" }
+      }
+    },
+    "testScenarios": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/testScenario" }
+        },
+        "optional": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/testScenario" }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "maxAttempts": { "type": "integer" },
+              "payloads": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "mfa": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "methods": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "selectors": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "oauth": {
+      "type": "object",
+      "properties": {
+        "providers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "selectors": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "testScenario": {
+      "type": "object",
+      "required": ["name", "description", "priority"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "priority": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"]
+        },
+        "steps": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

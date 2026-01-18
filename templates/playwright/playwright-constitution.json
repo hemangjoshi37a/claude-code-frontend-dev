@@ -1,0 +1,106 @@
+{
+  "version": "1.0.0",
+  "name": "Playwright Browser Constitution",
+  "description": "Configuration for Playwright browser installation and usage - ensures Chromium is installed only once",
+  "createdAt": "",
+  "lastUpdated": "",
+
+  "_metadata": {
+    "purpose": "Prevent repeated Chromium installations by checking installation status first",
+    "cacheLocation": "~/.cache/ms-playwright/",
+    "requiredBrowser": "chromium"
+  },
+
+  "installation": {
+    "checkCommand": "npx playwright install --dry-run chromium 2>&1 | grep -q 'already installed' && echo 'INSTALLED' || echo 'NOT_INSTALLED'",
+    "alternativeCheck": "ls ~/.cache/ms-playwright/chromium-* 2>/dev/null && echo 'INSTALLED' || echo 'NOT_INSTALLED'",
+    "installCommand": "npx playwright install chromium",
+    "installDeps": "npx playwright install-deps chromium",
+
+    "workflow": [
+      "1. Check if Chromium is already installed using checkCommand",
+      "2. If NOT_INSTALLED, run installCommand once",
+      "3. If dependencies missing, run installDeps (may need sudo)",
+      "4. Cache the installation status in memory for session",
+      "5. Never reinstall during the same session"
+    ]
+  },
+
+  "browserPaths": {
+    "linux": "~/.cache/ms-playwright/chromium-*/chrome-linux/chrome",
+    "macos": "~/Library/Caches/ms-playwright/chromium-*/chrome-mac/Chromium.app",
+    "windows": "%USERPROFILE%\\AppData\\Local\\ms-playwright\\chromium-*\\chrome-win\\chrome.exe"
+  },
+
+  "mcpConfig": {
+    "serverName": "playwright",
+    "command": "npx",
+    "args": ["@anthropic/mcp-playwright"],
+    "note": "MCP Playwright server handles browser lifecycle automatically"
+  },
+
+  "usagePatterns": {
+    "beforeFirstUse": {
+      "description": "Check and install if needed - run ONCE at start of testing session",
+      "script": "if ! ls ~/.cache/ms-playwright/chromium-* >/dev/null 2>&1; then npx playwright install chromium; fi"
+    },
+    "mcpUsage": {
+      "description": "Use MCP tools for browser automation - no manual browser management needed",
+      "tools": [
+        "mcp__playwright__browser_navigate",
+        "mcp__playwright__browser_screenshot",
+        "mcp__playwright__browser_click",
+        "mcp__playwright__browser_fill",
+        "mcp__playwright__browser_select",
+        "mcp__playwright__browser_hover",
+        "mcp__playwright__browser_evaluate",
+        "mcp__playwright__browser_console_messages",
+        "mcp__playwright__browser_close"
+      ]
+    }
+  },
+
+  "sessionManagement": {
+    "reuseSession": true,
+    "maxConcurrentBrowsers": 1,
+    "closeAfterTest": false,
+    "closeAfterSession": true,
+    "note": "Keep browser open during testing session, close only at end"
+  },
+
+  "errorHandling": {
+    "browserNotFound": {
+      "error": "Executable doesn't exist",
+      "solution": "Run: npx playwright install chromium"
+    },
+    "dependenciesMissing": {
+      "error": "Host system is missing dependencies",
+      "solution": "Run: npx playwright install-deps chromium (may need sudo)"
+    },
+    "browserCrashed": {
+      "error": "Browser closed unexpectedly",
+      "solution": "Close all browser instances and retry"
+    }
+  },
+
+  "agentGuidelines": {
+    "beforeTesting": [
+      "1. Check if this is the first Playwright action in the session",
+      "2. If first action, verify Chromium is installed",
+      "3. If not installed, install ONCE using installCommand",
+      "4. Mark installation as complete for this session",
+      "5. Proceed with MCP Playwright tools"
+    ],
+    "duringTesting": [
+      "1. Use MCP tools - they manage browser lifecycle",
+      "2. Do NOT call install commands again",
+      "3. Reuse existing browser session when possible",
+      "4. Take screenshots for evidence"
+    ],
+    "afterTesting": [
+      "1. Close browser only at end of full test session",
+      "2. Do not close between individual tests",
+      "3. Report any browser errors encountered"
+    ]
+  }
+}

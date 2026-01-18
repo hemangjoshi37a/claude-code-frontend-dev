@@ -10,6 +10,16 @@ color: yellow
 
 You are a specialized agent for **managing development servers**. Your mission is to ensure that a dev server is running and accessible for frontend testing, handling server startup, health checks, and cleanup.
 
+## Playwright Browser Awareness
+
+**Note**: This agent does not directly use Playwright MCP tools, but coordinates with agents that do. When other agents request a dev server for browser testing:
+
+1. **Reference Constitution**: See `/templates/playwright/playwright-constitution.json` for browser management
+2. **Session Awareness**: Browser-testing agents will check for Chromium installation separately
+3. **Coordination**: Ensure dev server is running before browser testing begins
+
+---
+
 ## Responsibilities
 
 1. **Server Detection**: Identify the project type and appropriate dev server command
@@ -19,9 +29,77 @@ You are a specialized agent for **managing development servers**. Your mission i
 5. **Server Monitoring**: Monitor server output for errors or issues
 6. **Cleanup**: Properly shut down servers when testing is complete
 
+## Constitution Integration
+
+Before starting server management, check for project constitutions in `.frontend-dev/`:
+
+### Loading Project Configuration
+
+```javascript
+// Check for .frontend-dev/config.json
+const configPath = '.frontend-dev/config.json';
+const config = await Read(configPath);
+
+if (config) {
+  // Use constitution-defined server settings
+  const { devServer } = JSON.parse(config);
+  // devServer contains: command, port, waitForReady, readyPattern
+}
+```
+
+### Constitution-Defined Server Settings
+
+The `.frontend-dev/config.json` may specify:
+
+```json
+{
+  "devServer": {
+    "command": "npm run dev",
+    "port": 5173,
+    "waitForReady": true,
+    "readyPattern": "Local:"
+  }
+}
+```
+
+**Priority Order:**
+1. Use settings from `.frontend-dev/config.json` if present
+2. Fall back to auto-detection if no constitution exists
+3. Report which configuration source was used
+
+### Constitution Files Reference
+
+| File | Purpose |
+|------|---------|
+| `.frontend-dev/config.json` | Project settings including dev server config |
+| `.frontend-dev/auth/login-constitution.json` | Login page URL for auth testing |
+| `.frontend-dev/testing/*.json` | Page URLs for testing navigation |
+
+---
+
 ## Workflow
 
 ### Phase 1: Project Detection
+
+**Step 1.1: Check Constitution First**
+```javascript
+// Try to load from constitution
+const configExists = await Glob('.frontend-dev/config.json');
+if (configExists.length > 0) {
+  const config = JSON.parse(await Read('.frontend-dev/config.json'));
+  if (config.devServer) {
+    // Use constitution settings
+    return {
+      command: config.devServer.command,
+      port: config.devServer.port,
+      readyPattern: config.devServer.readyPattern
+    };
+  }
+}
+// Fall back to auto-detection
+```
+
+**Step 1.2: Auto-Detection Fallback**
 
 Identify the project type by checking for common configuration files:
 

@@ -4,19 +4,25 @@ This document explains the architecture and design decisions behind the frontend
 
 ## Overview
 
-The frontend development plugin extends Claude Code's closed-loop development approach to frontend applications by integrating browser automation, visual testing, and iterative validation.
+The frontend development plugin extends Claude Code's closed-loop development approach to frontend applications by integrating browser automation, visual testing, iterative validation, **testing constitutions**, and **visual memory**.
 
 ## Core Architecture
 
 ### 1. Multi-Agent System
 
-The plugin uses a specialized agent architecture:
+The plugin uses a specialized 8-agent architecture:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Main Claude Session                  │
-│                   (Orchestrator)                        │
+│               (Closed-Loop Coordinator)                 │
 └────────────┬────────────────────────────────────────────┘
+             │
+             ├─► project-config-manager (Agent) ⭐ NEW
+             │   ├─ Initializes .frontend-dev/ directory
+             │   ├─ Loads testing constitutions
+             │   ├─ Manages login constitutions
+             │   └─ Returns loaded configs
              │
              ├─► dev-server-manager (Agent)
              │   ├─ Detects project type
@@ -25,21 +31,145 @@ The plugin uses a specialized agent architecture:
              │
              ├─► frontend-tester (Agent)
              │   ├─ Uses Playwright MCP tools
+             │   ├─ Loads testing constitution
              │   ├─ Interacts with browser
              │   ├─ Captures screenshots
              │   ├─ Monitors console
+             │   ├─ Stores in visual memory
              │   └─ Returns test report
              │
-             └─► frontend-validator (Agent)
-                 ├─ Compares results vs requirements
-                 ├─ Identifies issues
-                 ├─ Makes PASS/FAIL decision
-                 └─ Returns actionable feedback
+             ├─► frontend-validator (Agent)
+             │   ├─ Compares results vs requirements
+             │   ├─ Identifies issues
+             │   ├─ Makes PASS/FAIL decision
+             │   └─ Returns actionable feedback
+             │
+             ├─► auth-tester (Agent) ⭐ NEW
+             │   ├─ Loads login constitution
+             │   ├─ Tests authentication flows
+             │   ├─ Security testing (CSRF, XSS)
+             │   └─ Returns auth test report
+             │
+             ├─► ux-design-specialist (Agent)
+             │   ├─ Modern design recommendations
+             │   └─ Visual/styling guidance
+             │
+             └─► seo-specialist (Agent)
+                 ├─ SEO audits
+                 └─ Structured data recommendations
 ```
 
-### 2. Closed-Loop Mechanism
+### 2. Testing Constitutions System ⭐ NEW
 
-The closed-loop workflow ensures iterative refinement:
+Testing constitutions are JSON configuration files that define page-specific testing requirements:
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                 .frontend-dev/ Directory                   │
+│            (Project-specific configuration)                │
+└────────────┬───────────────────────────────────────────────┘
+             │
+             ├─► config.json
+             │   └─ Project settings, framework detection
+             │
+             ├─► auth/
+             │   └─► login-constitution.json
+             │       ├─ Login page URL and selectors
+             │       ├─ Credential storage (env vars)
+             │       ├─ Success/failure indicators
+             │       ├─ Test scenarios (valid, invalid, etc.)
+             │       └─ Security tests (CSRF, XSS)
+             │
+             ├─► testing/
+             │   ├─► homepage.json
+             │   ├─► dashboard.json
+             │   └─► settings.json
+             │       ├─ Features to test (primary/secondary)
+             │       ├─ Interactive elements (buttons, forms, links)
+             │       ├─ Visual elements (graphs, tables, images)
+             │       ├─ Layout requirements
+             │       ├─ State management (loading, error, empty)
+             │       ├─ Accessibility requirements
+             │       ├─ Performance budgets
+             │       └─ Testing order/sequence
+             │
+             ├─► memory/
+             │   ├─► sessions/
+             │   │   └─ Session records with context
+             │   ├─► screenshots/
+             │   │   └─ Historical screenshots with metadata
+             │   └─► timeline.json
+             │       └─ Chronological event log
+             │
+             └─► reports/
+                 └─ Historical test reports
+```
+
+### 3. Visual Memory (MemVid MCP) ⭐ NEW
+
+Visual memory enables chronological tracking and visual regression detection using [memvid-mcp-server](https://github.com/khgs2411/memvid_mcp):
+
+```
+┌────────────────────────────────────────────────────────────┐
+│              memvid-mcp-server (npm package)                │
+│          Stores data in portable .mv2 files                 │
+└────────────┬───────────────────────────────────────────────┘
+             │
+             ├─► create_or_open_memory
+             │   └─ Initialize/access project memory file
+             │
+             ├─► add_content
+             │   ├─ Store test results with metadata
+             │   ├─ Store timeline events
+             │   ├─ Store screenshot paths and metadata
+             │   └─ Tag content for easy retrieval
+             │
+             ├─► search_memory
+             │   ├─ Hybrid search (lexical + semantic)
+             │   ├─ Query previous test results
+             │   ├─ Find baseline screenshots
+             │   └─ query="*" lists all items
+             │
+             └─► ask_memory (requires OpenAI API key)
+                 ├─ Natural language queries
+                 └─ "What tests failed last week?"
+```
+
+**Memory Data Flow:**
+```
+Session Start ──► create_or_open_memory ──► Initialize .mv2 file
+     │
+     ▼
+Test Result ──► add_content ──► Store with metadata tags
+     │
+     ▼
+Screenshot ──► Save to disk ──► add_content (path + metadata)
+     │
+     ▼
+Query History ──► search_memory ──► Find previous results
+     │
+     ▼
+Detect Regression ──► Compare with baseline search results
+```
+
+**MCP Configuration:**
+```json
+{
+  "mcpServers": {
+    "memvid": {
+      "command": "npx",
+      "args": ["-y", "memvid-mcp-server@latest"],
+      "env": {
+        "MEMVID_LOCAL_STORAGE": "1"
+      }
+    }
+  }
+}
+```
+
+### 4. Closed-Loop Mechanism
+
+The closed-loop workflow ensures iterative refinement with constitution and memory support:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -222,9 +352,15 @@ User/Claude uses Edit or Write tool
 
 ### Agents
 
+#### project-config-manager ⭐ NEW
+- **Purpose**: Initialize and manage .frontend-dev/ directory and constitutions
+- **Tools**: Read, Write, Glob, Grep, Bash
+- **Model**: Sonnet
+- **Output**: Loaded constitutions, initialized config
+
 #### frontend-tester
-- **Purpose**: Execute browser interactions and capture state
-- **Tools**: Playwright MCP tools, Read, Bash, BashOutput
+- **Purpose**: Execute browser interactions and capture state using testing constitutions
+- **Tools**: Playwright MCP tools, MemVid MCP tools, Read, Bash, BashOutput
 - **Model**: Sonnet (fast and cost-effective)
 - **Output**: Comprehensive test report with screenshots and console logs
 
@@ -239,6 +375,24 @@ User/Claude uses Edit or Write tool
 - **Tools**: Bash, BashOutput, KillShell, Read, Glob
 - **Model**: Sonnet
 - **Output**: Server URL and status
+
+#### auth-tester ⭐ NEW
+- **Purpose**: Comprehensive authentication and login flow testing
+- **Tools**: Playwright MCP tools, Read, Bash, BashOutput, Grep, Glob
+- **Model**: Sonnet
+- **Output**: Auth test report with session state
+
+#### ux-design-specialist
+- **Purpose**: Modern design recommendations and visual guidance
+- **Tools**: Read, Bash, Grep, Glob, WebSearch, WebFetch
+- **Model**: Sonnet
+- **Output**: Design recommendations, CSS/styling code
+
+#### seo-specialist
+- **Purpose**: SEO audits and structured data recommendations
+- **Tools**: Read, Bash, Grep, Glob
+- **Model**: Sonnet
+- **Output**: SEO audit report, recommendations
 
 ### Commands
 
