@@ -1,0 +1,433 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://frontend-dev.claude/schemas/testing-constitution.json",
+  "title": "Testing Constitution Schema",
+  "description": "Schema for page-specific testing configuration",
+  "type": "object",
+  "required": ["version", "pageName", "pageUrl"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "pageName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pageUrl": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"]
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/feature" }
+        },
+        "secondary": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/feature" }
+        }
+      }
+    },
+    "interactiveElements": {
+      "type": "object",
+      "properties": {
+        "buttons": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/button" }
+        },
+        "forms": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/form" }
+        },
+        "links": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/link" }
+        },
+        "dropdowns": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/dropdown" }
+        },
+        "modals": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/modal" }
+        },
+        "tabs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/tabGroup" }
+        }
+      }
+    },
+    "visualElements": {
+      "type": "object",
+      "properties": {
+        "graphs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/graph" }
+        },
+        "tables": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/table" }
+        },
+        "images": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/image" }
+        },
+        "icons": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "animations": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/animation" }
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "sections": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/section" }
+        },
+        "responsiveBreakpoints": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "criticalViewports": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "stateManagement": {
+      "type": "object",
+      "properties": {
+        "loadingStates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state" }
+        },
+        "errorStates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state" }
+        },
+        "emptyStates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state" }
+        },
+        "successStates": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state" }
+        }
+      }
+    },
+    "dataFlow": {
+      "type": "object",
+      "properties": {
+        "apiEndpoints": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/apiEndpoint" }
+        },
+        "realTimeUpdates": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "type": {
+              "type": "string",
+              "enum": ["websocket", "sse", "polling"]
+            },
+            "testCases": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "wcagLevel": {
+          "type": "string",
+          "enum": ["A", "AA", "AAA"]
+        },
+        "requirements": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "screenReaderFlow": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "keyboardNavigation": {
+          "type": "object",
+          "properties": {
+            "tabOrder": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "shortcuts": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "budgets": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "testingOrder": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/testStep" }
+        }
+      }
+    },
+    "knownIssues": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "skipTests": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "customTests": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  },
+  "definitions": {
+    "feature": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "selector": { "type": "string" },
+        "testType": { "type": "string" },
+        "required": { "type": "boolean" },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "button": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "action": { "type": "string" },
+        "expectedBehavior": { "type": "string" },
+        "testCases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scenario": { "type": "string" },
+              "expectedResult": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "form": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "fields": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/formField" }
+        },
+        "submitButton": { "type": "string" },
+        "successIndicator": { "type": "string" },
+        "errorIndicator": { "type": "string" }
+      }
+    },
+    "formField": {
+      "type": "object",
+      "required": ["name", "selector", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "type": { "type": "string" },
+        "required": { "type": "boolean" },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "minLength": { "type": ["integer", "null"] },
+            "maxLength": { "type": ["integer", "null"] },
+            "pattern": { "type": ["string", "null"] },
+            "customValidation": { "type": ["string", "null"] }
+          }
+        },
+        "testValues": {
+          "type": "object",
+          "properties": {
+            "valid": { "type": "array", "items": { "type": "string" } },
+            "invalid": { "type": "array", "items": { "type": "string" } },
+            "edgeCases": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "destination": { "type": "string" },
+        "opensNewTab": { "type": "boolean" }
+      }
+    },
+    "dropdown": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" } },
+        "defaultValue": { "type": "string" }
+      }
+    },
+    "modal": {
+      "type": "object",
+      "required": ["name", "triggerSelector", "modalSelector"],
+      "properties": {
+        "name": { "type": "string" },
+        "triggerSelector": { "type": "string" },
+        "modalSelector": { "type": "string" },
+        "closeSelector": { "type": "string" },
+        "testCases": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tabGroup": {
+      "type": "object",
+      "required": ["name", "tabSelector", "contentSelector"],
+      "properties": {
+        "name": { "type": "string" },
+        "tabSelector": { "type": "string" },
+        "contentSelector": { "type": "string" },
+        "tabs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "required": ["name", "selector", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "type": { "type": "string" },
+        "dataSource": { "type": "string" },
+        "testCases": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "table": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "features": {
+          "type": "object",
+          "properties": {
+            "sorting": { "type": "boolean" },
+            "pagination": { "type": "boolean" },
+            "filtering": { "type": "boolean" },
+            "selection": { "type": "boolean" }
+          }
+        },
+        "testCases": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "altTextRequired": { "type": "boolean" },
+        "lazyLoading": { "type": "boolean" }
+      }
+    },
+    "animation": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "trigger": { "type": "string" },
+        "reducedMotion": { "type": "boolean" }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "required": { "type": "boolean" }
+      }
+    },
+    "state": {
+      "type": "object",
+      "required": ["name", "selector"],
+      "properties": {
+        "name": { "type": "string" },
+        "selector": { "type": "string" },
+        "duration": { "type": "string" },
+        "recoveryAction": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "apiEndpoint": {
+      "type": "object",
+      "required": ["name", "method", "url"],
+      "properties": {
+        "name": { "type": "string" },
+        "method": { "type": "string" },
+        "url": { "type": "string" },
+        "expectedStatus": { "type": "integer" },
+        "mockData": { "type": ["object", "null"] }
+      }
+    },
+    "testStep": {
+      "type": "object",
+      "required": ["step", "action", "validation"],
+      "properties": {
+        "step": { "type": "integer" },
+        "action": { "type": "string" },
+        "validation": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

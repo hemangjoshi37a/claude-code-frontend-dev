@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "memvid": {
+      "command": "npx",
+      "args": ["-y", "memvid-mcp-server@latest"],
+      "env": {
+        "MEMVID_LOCAL_STORAGE": "1"
+      }
+    }
+  }
+}
