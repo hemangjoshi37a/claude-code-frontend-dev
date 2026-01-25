@@ -29,14 +29,16 @@ The plugin uses a specialized 8-agent architecture:
              │   ├─ Starts/verifies dev server
              │   └─ Returns server URL
              │
-             ├─► frontend-tester (Agent)
+             ├─► frontend-tester (Agent) - ITERATIVE APPROACH
              │   ├─ Uses Playwright MCP tools
              │   ├─ Loads testing constitution
-             │   ├─ Interacts with browser
-             │   ├─ Captures screenshots
-             │   ├─ Monitors console
-             │   ├─ Stores in visual memory
-             │   └─ Returns test report
+             │   ├─ **ITERATIVE TESTING**: Action → Screenshot → Analyze → Plan → Repeat
+             │   ├─ Keeps browser open throughout session
+             │   ├─ Takes screenshot AFTER EVERY action
+             │   ├─ Analyzes each screenshot before next action
+             │   ├─ Stores in .frontend-dev/screenshots/ (NEVER /tmp)
+             │   ├─ Maintains session state in .frontend-dev/sessions/
+             │   └─ Returns step-by-step test report
              │
              ├─► frontend-validator (Agent)
              │   ├─ Compares results vs requirements
@@ -167,7 +169,41 @@ Detect Regression ──► Compare with baseline search results
 }
 ```
 
-### 4. Closed-Loop Mechanism
+### 4. Iterative Step-by-Step Testing Approach
+
+The frontend-tester uses an iterative testing approach instead of batch script generation:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              ITERATIVE TESTING LOOP                         │
+│                                                             │
+│   DO ACTION ───► TAKE SCREENSHOT ───► ANALYZE STATE         │
+│       ▲                                    │                │
+│       │                                    ▼                │
+│       └──────── PLAN NEXT ACTION ◄───────────               │
+│                                                             │
+│                      REPEAT                                 │
+│                 until complete                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Why Iterative Testing?**
+| Batch Script Approach | Iterative Step-by-Step |
+|----------------------|------------------------|
+| Generate all steps upfront | Discover steps as you go |
+| No adaptation to actual state | Adapt based on what you see |
+| Misses unexpected UI changes | Catches all visual changes |
+| Tests what you expect | Tests what actually exists |
+| Single pass, all or nothing | Continuous feedback loop |
+
+**Storage (CRITICAL):**
+- All files stored in `.frontend-dev/` directory
+- Screenshots: `.frontend-dev/screenshots/session-{timestamp}/`
+- Session state: `.frontend-dev/sessions/session-{timestamp}.json`
+- Memory: `.frontend-dev/memory/`
+- **NEVER use `/tmp`** for any file storage
+
+### 5. Closed-Loop Mechanism
 
 The closed-loop workflow ensures iterative refinement with constitution and memory support:
 
@@ -359,10 +395,12 @@ User/Claude uses Edit or Write tool
 - **Output**: Loaded constitutions, initialized config
 
 #### frontend-tester
-- **Purpose**: Execute browser interactions and capture state using testing constitutions
+- **Purpose**: Execute browser interactions iteratively (action → screenshot → analyze → next)
+- **Approach**: Step-by-step iterative testing, NOT batch script generation
 - **Tools**: Playwright MCP tools, MemVid MCP tools, Read, Bash, BashOutput
 - **Model**: Sonnet (fast and cost-effective)
-- **Output**: Comprehensive test report with screenshots and console logs
+- **Storage**: All files in `.frontend-dev/` (screenshots, sessions, memory) - NEVER `/tmp`
+- **Output**: Session state file, step-by-step screenshots, comprehensive test report
 
 #### frontend-validator
 - **Purpose**: Objective validation of implementations

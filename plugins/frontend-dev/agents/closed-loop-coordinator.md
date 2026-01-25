@@ -95,11 +95,13 @@ Before starting any work, ensure the project has a `.frontend-dev/` configuratio
 - **Output**: Design recommendations, CSS/styling code
 
 ### 3. Frontend Tester (`frontend-tester`)
-- **Role**: Browser automation, visual testing, screenshot capture
+- **Role**: **Iterative step-by-step** browser automation, visual testing, screenshot capture
+- **Testing approach**: Action → Screenshot → AI Analysis → Plan Next → Repeat
 - **When to use**: After EVERY code change, for validation
 - **Parallel**: NO - must run serially after implementation
 - **Input needs**: Server URL, test scenario, **testing constitution**
-- **Output**: Screenshots, console logs, test report
+- **Output**: Session state file, step-by-step screenshots in `.frontend-dev/screenshots/`, test report
+- **Storage**: ALL files stored in `.frontend-dev/` directory (NEVER `/tmp`)
 
 ### 4. Frontend Validator (`frontend-validator`)
 - **Role**: Validates implementation vs requirements, PASS/FAIL decisions
@@ -204,8 +206,10 @@ if (requiresAuthentication(userRequest)) {
 ```javascript
 // Initialize memvid memory for this project
 // Uses memvid-mcp-server (npm package)
+// IMPORTANT: All memory files stored in .frontend-dev/memory/
 await mcp__memvid__create_or_open_memory({
-  project: "frontend-tests"
+  project: "frontend-tests",
+  basePath: ".frontend-dev/memory"  // Store in plugin directory
 });
 
 // Generate session ID for this testing session
@@ -372,19 +376,43 @@ Closed-loop means: change → test → validate → iterate.
 
 ### Phase 3: Closed-Loop Testing (Core Innovation)
 
-**Step 3.1: Visual Testing After EVERY Change (Constitution-Driven)**
+**Step 3.1: Iterative Visual Testing After EVERY Change (Constitution-Driven)**
+
+The frontend-tester uses an **iterative step-by-step approach**:
+1. Do action → Take screenshot → Analyze state → Plan next action → Repeat
+
 ```javascript
 // Load testing constitution for the page being tested
 const pageConstitution = testingConstitutions[currentPage];
 
-After each implementation, launch frontend-tester with constitution:
+// Generate session ID for this test run
+const sessionId = `session-${Date.now()}`;
+const screenshotDir = `.frontend-dev/screenshots/${sessionId}`;
 
+// Ensure directories exist
+await Bash(`mkdir -p "${screenshotDir}"`);
+
+// Launch frontend-tester with iterative testing approach
 testResult = await Task({
   subagent_type: "frontend-dev:frontend-tester",
-  description: "Visual testing with screenshots",
-  prompt: `You are the frontend-tester agent (Expert Edition).
+  description: "Iterative visual testing",
+  prompt: `You are the frontend-tester agent with ITERATIVE STEP-BY-STEP testing.
 
   [Include full agent instructions from agents/frontend-tester.md]
+
+  ## ITERATIVE TESTING APPROACH (CRITICAL):
+  For each test step:
+  1. DO an action (navigate, click, fill, etc.)
+  2. TAKE a screenshot immediately after
+  3. ANALYZE the screenshot to see what happened
+  4. PLAN the next action based on what you see
+  5. REPEAT until testing is complete
+
+  ## SESSION STORAGE (CRITICAL - NEVER USE /tmp):
+  - Session ID: ${sessionId}
+  - Screenshot directory: ${screenshotDir}
+  - Session state file: .frontend-dev/sessions/${sessionId}.json
+  - Memory files: .frontend-dev/memory/
 
   ## TESTING CONSTITUTION (Use this to guide testing):
   ${JSON.stringify(pageConstitution, null, 2)}
@@ -392,35 +420,39 @@ testResult = await Task({
   The constitution defines:
   - Features to test: ${pageConstitution.features}
   - Interactive elements: ${pageConstitution.interactiveElements}
-  - Visual elements (graphs, tables): ${pageConstitution.visualElements}
-  - Accessibility requirements: ${pageConstitution.accessibility}
   - Testing order: ${pageConstitution.testingOrder}
-
-  Your specific test scenario:
-  - Navigate to: ${testURL}
-  - Test all features defined in constitution
-  - Test all buttons: ${pageConstitution.interactiveElements.buttons}
-  - Test all forms: ${pageConstitution.interactiveElements.forms}
-  - Test all graphs: ${pageConstitution.visualElements.graphs}
-  - Expected behavior: Per constitution acceptance criteria
-
-  CRITICAL: Capture screenshots at EVERY step.
-  CRITICAL: Monitor console for ALL errors/warnings.
-  CRITICAL: Follow testing order from constitution.
 
   Server URL: ${serverURL}
 
-  Return comprehensive report with:
-  1. Step-by-step screenshots
-  2. Console output (full log)
-  3. Any errors or unexpected behavior
-  4. Performance metrics if available
-  5. Constitution compliance status
+  ## STEP-BY-STEP TESTING WORKFLOW:
+  1. Initialize session state in .frontend-dev/sessions/
+  2. Navigate to page → Take screenshot → Analyze
+  3. For each interactive element:
+     - Perform action → Take screenshot → Analyze → Record result
+     - Save session state after each step
+  4. Check console messages after each interaction
+  5. Build final report with all steps and screenshots
+
+  Return comprehensive report with session_id and screenshot paths.
   `
 });
 
-// Store screenshots in visual memory
-await storeInMemory(testResult.screenshots, sessionId);
+// Screenshots are already stored in .frontend-dev/screenshots/
+// Store test result metadata in visual memory
+await mcp__memvid__add_content({
+  content: JSON.stringify({
+    type: "test_session",
+    sessionId: sessionId,
+    screenshotDir: screenshotDir,
+    status: testResult.status,
+    stepsCompleted: testResult.stepsCompleted,
+    timestamp: new Date().toISOString()
+  }),
+  metadata: {
+    type: "test_session",
+    sessionId: sessionId
+  }
+});
 ```
 
 **Step 3.2: Analyze Screenshots & Console (YOU do this)**
